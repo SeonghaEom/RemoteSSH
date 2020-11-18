@@ -20,6 +20,8 @@ function App() {
   
   return (
     <BrowserRouter>
+      <div className="App">
+      </div>
         <AppContainer>
             <Switch>
                 <Route exact path="/room-list" component={RoomList} />

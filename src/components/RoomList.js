@@ -1,10 +1,10 @@
 import React, {useEffect, useState} from "react";
-// import firestore from "../config/fbconfig";
+import firestore from "../config/fbconfig";
 import { useHistory } from 'react-router-dom';
 
 const RoomList = () => {
 
-        const [roomList, setRoomList] = useState([{roomId: "0", roomName: "Pizza"}]);
+        const [roomList, setRoomList] = useState([{roomId: "pizza", roomName: "Pizza"}]);
 
         // useEffect(() => {
         //     firestore.collection('studyrooms').get()

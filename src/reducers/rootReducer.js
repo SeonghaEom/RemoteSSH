@@ -1,13 +1,11 @@
 import { combineReducers } from 'redux';
 import sampleReducer from './sampleReducer';
-import history from './historyReducer';
-import stepNumber from './stepNumberReducer';
-import xIsNext from './playerReducer';
-// import reducerName from 'reducerFilePath';
+// import {firebaseReducer} from "react-redux-firebase";
+// import {firestoreReducer} from "redux-firestore";
 
 export default combineReducers({
     // reducerName   * make sure to import reducerFile
-    history,
-    stepNumber,
-    xIsNext
+    // firebase: firebaseReducer,
+    // firestore: firestoreReducer,
+    sampleReducer
 });
