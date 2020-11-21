@@ -31,10 +31,6 @@ Set.prototype.intersection = function(setB) {
   return intersection;
 }
 
-app.get('/room-list', (req, res) => {
-  const rawRoomIds = Object.keys(io.sockets.adapter.rooms);
-  res.json([...new Set(rawRoomIds).intersection(new Set(createdRooms))]);
-});
 
 const createdRooms = [];
 
@@ -77,7 +73,7 @@ io.on('connection', (socket) => {
           error = true;
         }
       });
-      socket.emit('FE-error-user-exist', { error });
+      socket.emit('FE-error-user-exist', { error: error, roomId: roomId, userName: userName });
     });
   });
 
@@ -89,7 +85,9 @@ io.on('connection', (socket) => {
     createdRooms.push(roomId);
     socket.join(roomId);
     socketList[socket.id] = { userName, video: true, audio: true };
-
+    console.log("socketList ", socketList);
+    console.log("createdRooms ", createdRooms);
+    // console.log("io sockets", io.sockets);
     // Set User List
     io.sockets.in(roomId).clients((err, clients) => {
       try {
@@ -98,13 +96,32 @@ io.on('connection', (socket) => {
           // Add User List
           users.push({ userId: client, info: socketList[client] });
         });
+        // console.log("all users ", users);
         socket.broadcast.to(roomId).emit('FE-user-join', users);
         // io.sockets.in(roomId).emit('FE-user-join', users);
       } catch (e) {
-        io.sockets.in(roomId).emit('FE-error-user-exist', { err: true });
+        io.sockets.in(roomId).emit('FE-error-user-exist', { err: true, roomId: roomId, userName: userName });
       }
     });
   });
+
+  socket.on('BE-get-all-users', (roomId) => {
+    io.sockets.in(roomId).clients((err, clients) => {
+      try {
+        const users = [];
+        console.log(clients);
+        clients.forEach((client) => {
+          // Add User List
+          users.push({ userId: client, info: socketList[client] });
+        });
+        console.log("all users ", roomId, users);
+        socket.emit('FE-show-all-users', {roomId: roomId, users: users});
+        // io.sockets.in(roomId).emit('FE-user-join', users);
+      } catch (e) {
+        
+      }
+    });
+  })
 
   socket.on('BE-call-user', ({ userToCall, from, signal }) => {
     io.to(userToCall).emit('FE-receive-call', {
@@ -149,4 +166,19 @@ http.listen(PORT, () => {
 
   console.log(`App listening on port ${PORT}!`);
 
+});
+
+
+
+// send createdRooms and socketList
+app.get('/otherrooms', (req, res) => {
+  res.send({
+    "rooms": createdRooms,
+    "users": socketList,
+  });
+});
+
+app.get('/room-list', (req, res) => {
+  const rawRoomIds = Object.keys(io.sockets.adapter.rooms);
+  res.json([...new Set(rawRoomIds).intersection(new Set(createdRooms))]);
 });
