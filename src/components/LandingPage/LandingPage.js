@@ -1,32 +1,17 @@
 import React from 'react'
+// import Navbar from '../Navbar/Navbar'
 import Navbar from 'react-bootstrap/Navbar'
 import Nav from 'react-bootstrap/Nav'
 import Scrollchor from 'react-scrollchor';
 import {Link} from 'react-router-dom'
+import Navigation from '../Navbar/Navigation'
 
 // import Button from 'react-bootstrap/Button'
 
 export default function LandingPage() {
     return (
         <div id="landingPage" style={{overflow: "auto"}}>
-            <Navbar>
-                <Navbar.Brand href="#home">
-                    <img alt="remoteSSHLogo" height="28" src={require('../../pictures/logo.svg')}/>
-                </Navbar.Brand>
-                <Navbar.Toggle aria-controls="basic-navbar-nav" />
-                <Navbar.Toggle />
-                <Navbar.Collapse className="justify-content-end">
-                    <Nav.Link>
-                        <Scrollchor className="nav-link" to="#features">Features</Scrollchor>
-                    </Nav.Link>
-                    <Nav.Link>
-                        <Scrollchor className="nav-link" to="#about-us">About Us</Scrollchor>
-                    </Nav.Link>
-                    <Link to="/join">
-                        <button type="button" className="secondary-button">Create Room</button>
-                    </Link>
-                </Navbar.Collapse>
-            </Navbar>
+            <Navigation/>
 
             <div className="intro">
                 <h1>Lets Sig Sa Hae Together!</h1>
@@ -72,7 +57,6 @@ export default function LandingPage() {
             <footer className="landing-footer">
                 <small>Copyright  &copy;2020. RemoteSSH</small>
             </footer> 
-
         </div>
     )
 }
