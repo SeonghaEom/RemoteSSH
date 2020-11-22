@@ -1,6 +1,6 @@
 export default (state = {}, action) => {
     switch (action.type) {
-     case 'ACTION_TYPE':
+     case 'GET_QUESTION_LIST':
       return action.actionParameter
      default:
       return state
