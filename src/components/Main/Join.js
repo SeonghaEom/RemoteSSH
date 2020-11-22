@@ -13,6 +13,8 @@ const Join = (props) => {
     const [errMsg, setErrMsg] = useState('');
 
     const query = useQuery();
+    console.log("query ",  query);
+ 
 
     const [roomId, setRoomId] = useState(query.get('roomId') || '');
     const [userName, setUserName] = useState('');
