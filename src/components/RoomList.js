@@ -1,26 +1,56 @@
 import React, {useEffect, useState} from "react";
 import firestore from "../config/fbconfig";
 import { useHistory } from 'react-router-dom';
+import socket from '../socket';
 
 const RoomList = () => {
 
-        const [roomList, setRoomList] = useState([{roomId: "pizza", roomName: "Pizza"}]);
+    const [roomList, setRoomList] = useState([]);
+    const [userList, setUserList] = useState([]);
 
-        // useEffect(() => {
-        //     firestore.collection('studyrooms').get()
-        //         .then((snapshot) => {
+    useEffect(() => {
+      async function fetchData(){
+        await fetch('http://localhost:9000/room-list')
+          .then(function(response) {
+            return response.json();
+        }).then((json) => {
+          setRoomList(json);
+          json.forEach((roomId) => {
+            socket.emit('BE-get-all-users', roomId);
+          })
+        })}
+      fetchData();
+      socket.on('FE-show-all-users', ({roomId, users}) => {
+        setUserList((preList) => {
+          
+          preList = preList.concat({
+              roomId: roomId,
+              users: users,
+          })
+          console.log(preList);
+          return preList;
+        })
+      });
 
-        //             const rows = [];
-        //             snapshot.forEach((doc) => {
-        //                 rows.push(doc.data());
-        //             });
-        //             return rows;
-        //         }).then(roomList => {
-        //         setRoomList(roomList);
-        //     });
-        // }, []);
+    }, []);
 
-        const history = useHistory();
+    const history = useHistory();
+
+    function drawUsers(users){
+      return (
+        <div>
+          {(users.length > 0
+            ? users.map((userinfo) =>
+                <div
+                    // onHover={() => {
+                    //     history.push('/join?roomId=' + roomuser.roomId);
+                >
+                    {userinfo.info.userName}
+                </div>)
+            : <div>Loading</div>)}
+        </div>
+      )
+    }
 
 // Room list from server
         // fetch('http://localhost:9000/room-list').then(r =>
@@ -33,15 +63,16 @@ const RoomList = () => {
             <h1 style={{margin: 20}}>Rooms</h1>
             <div style={{display: 'flex', flexWrap: 'wrap', justifyContent: 'start'}}>
                 {
-                    (roomList.length > 0
-                        ? roomList.map((room) =>
+                    (userList.length > 0
+                        ? userList.map((roomuser) =>
                             <div
                                 onClick={() => {
-                                    history.push('/join?roomId=' + room.roomId);
+                                    history.push('/join?roomId=' + roomuser.roomId);
                                 }}
                                 style={{backgroundColor: '#222', width: 300, padding: 10, margin: 20, borderRadius: 20}}
                             >
-                                {room.roomName}
+                                {roomuser.roomId}
+                                {drawUsers(roomuser.users)}
                             </div>)
                         : <div>Loading</div>)
                 }

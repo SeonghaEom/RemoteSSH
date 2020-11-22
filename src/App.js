@@ -6,6 +6,7 @@ import { connect } from 'react-redux';
 import { Route, BrowserRouter, Switch } from 'react-router-dom';
 
 import Join from './components/Main/Join';
+import OtherRoom from './components/Main/OtherRoom';
 import Room from './components/Room/Room'
 import styled from 'styled-components';
 import RoomList from "./components/RoomList";
@@ -29,6 +30,7 @@ function App() {
                 <Route exact path="/" component={LandingPage} />
                 <Route exact path="/room-list" component={RoomList} />
                 <Route exact path="/join" component={Join} />
+                <Route exact path="/otherroom" component={OtherRoom} />
                 <Route exact path="/room/:roomId" component={Room} />
                 <Route exact path="/login" component={LoginPage} />
             </Switch>

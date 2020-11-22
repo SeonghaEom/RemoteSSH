@@ -7,7 +7,7 @@ import BottomBar from '../BottomBar/BottomBar';
 import Chat from '../Chat/Chat';
 
 const Room = (props) => {
-  const currentUser = sessionStorage.getItem('user');
+  var currentUser = sessionStorage.getItem('user');
   const [peers, setPeers] = useState([]);
   const [userVideoAudio, setUserVideoAudio] = useState({
     localUser: { video: true, audio: true },
@@ -18,22 +18,25 @@ const Room = (props) => {
   const userVideoRef = useRef();
   const screenTrackRef = useRef();
   const userStream = useRef();
-  const roomId = props.match.params.roomId;
+  var roomId = props.match.params.roomId;
+  console.log("Room ", sessionStorage);
+
 
   useEffect(() => {
     // Set Back Button Event
     window.addEventListener('popstate', goToBack);
-
+    console.log("peers ", peers);
     // Connect Camera & Mic
     navigator.mediaDevices
       .getUserMedia({ video: true, audio: true })
       .then((stream) => {
         userVideoRef.current.srcObject = stream;
         userStream.current = stream;
-
-        socket.emit('BE-join-room', { roomId, userName: currentUser });
+        console.log(currentUser);
+        socket.emit('BE-join-room', { roomId, userName: currentUser});
         socket.on('FE-user-join', (users) => {
           // all users
+          console.log(users);
           const peers = [];
           users.forEach(({ userId, info }) => {
             let { userName, video, audio } = info;

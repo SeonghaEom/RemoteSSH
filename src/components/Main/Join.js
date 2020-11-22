@@ -15,15 +15,18 @@ const Join = (props) => {
     const query = useQuery();
     console.log("query ",  query);
  
+
     const [roomId, setRoomId] = useState(query.get('roomId') || '');
     const [userName, setUserName] = useState('');
 
     useEffect(() => {
 
-        socket.on('FE-error-user-exist', ({error}) => {
+        socket.on('FE-error-user-exist', ({error, roomId, userName}) => {
             if (!error) {
+                // console.log("Join ", userName, roomId);
                 sessionStorage.setItem('user', userName);
                 props.history.push(`/room/${roomId}`);
+
             } else {
                 setErr(error);
                 setErrMsg('User name already exist');
@@ -36,6 +39,7 @@ const Join = (props) => {
             setErr(true);
             setErrMsg('Enter Room Name or User Name');
         } else {
+          // console.log("Join ", userName, roomId);
             socket.emit('BE-check-user', {roomId: roomId, userName});
         }
     }
