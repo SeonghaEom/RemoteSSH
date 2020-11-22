@@ -12,6 +12,7 @@ import styled from 'styled-components';
 import RoomList from "./components/RoomList";
 import LandingPage from './components/LandingPage/LandingPage';
 import LoginPage from './components/LoginPage/LoginPage';
+import TopicSuggestion from './components/TopicSuggestion/TopicSuggestion'
 
 
 const mapStateToProps = state => ({
@@ -19,8 +20,6 @@ const mapStateToProps = state => ({
 })
 
 function App() {
-
-  
   return (
     <BrowserRouter>
       <div className="App">
@@ -33,6 +32,7 @@ function App() {
                 <Route exact path="/otherroom" component={OtherRoom} />
                 <Route exact path="/room/:roomId" component={Room} />
                 <Route exact path="/login" component={LoginPage} />
+                <Route exact path="/topicSuggestion" component={TopicSuggestion} />
             </Switch>
         </AppContainer>
     </BrowserRouter>
