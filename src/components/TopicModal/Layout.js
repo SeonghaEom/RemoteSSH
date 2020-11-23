@@ -21,17 +21,17 @@ class Layout extends React.Component {
     }
 
     _onAction(e) {
-      console.log('user did something', e)
+      //console.log('user did something', e)
       this.setState({isTimedOut: false})
     }
    
     _onActive(e) {
-      console.log('user is active', e)
+      //console.log('user is active', e)
       this.setState({isTimedOut: false})
     }
    
     _onIdle(e) {
-      console.log('user is idle', e)
+      //console.log('user is idle', e)
       this.setState({showModal: true})
       this.idleTimer.reset();
       this.setState({isTimedOut: true})
