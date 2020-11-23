@@ -38,34 +38,19 @@ class LoginPage extends React.Component {
 
     addInfo = e => { 
         e.preventDefault();
+        const userRef = firebase.database().ref('User');
+        const user = {
+            name: this.state.username,
+        }
+        userRef.push(user);
 
-        //adding data to firestore
-        // const db = firebase.firestore();
-        const userRef = firestore.collection("Users").add({
-            username: this.state.username,
-        });
-        const topicRef = firestore.collection("Topics").add({
+        const topicRef = firebase.database().ref('Topics');
+        const topic = {
             topic: this.state.topic,
             likes: 0,
             dislikes: 0,
-        });
-
-        // //for image upload
-        // const {image} = this.state;
-        // const uploadPhoto = storage.ref(`foodImages/${this.state.username}`).put(image);
-        // uploadPhoto.on('state_changed', 
-        // (snapshot) => {
-        //     //show progress of upload
-
-        // },
-        // (error) => {
-        //     console.log(error);
-        // }, 
-        // () => {
-        //     // complete upload
-        //     storage.ref('foodImages').child(this.state.username).getDownloadURL()
-        //     .then(url => console.log(url));
-        // });
+        }
+        topicRef.push(topic);
 
         //clear the component state
         this.setState({

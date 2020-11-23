@@ -235,3 +235,41 @@ div h2 {
 .close:after {
   transform: rotate(-45deg);
 }
+
+//topic suggestion
+
+
+//Topic Card
+.topic-card {
+  display: flex;
+  justify-content: space-between;
+  padding: 15px 52px;
+  background-color: rgba(90, 56, 253, 0.2);
+  color: #5A38FD;
+  font-weight: 700;
+  border: none;
+  border-radius: 10px;
+  align-items: center;
+  width: 80%;
+  margin: 1em auto;
+}
+
+.topic-card div button{ 
+  border: none;
+  background: transparent;
+  margin: 0 0.5em;
+}
+
+.topic-item {
+  list-style: none;
+}
+
+.dislike-button {
+  transform: rotateZ(180deg);
+}
+
+//topic suggestion 
+.topic-suggestion .proceed-room{ 
+  text-align: center;
+  margin: 0 auto;
+}
