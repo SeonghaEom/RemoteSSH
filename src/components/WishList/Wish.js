@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from 'react';
+import React, { useEffect, useState, useRef, useHistory } from 'react';
 import styled from 'styled-components';
 import socket from '../../socket';
 // import socket from '../../socket';
@@ -13,10 +13,12 @@ const Wish = ({display, setWishList, wishlist, goToScreen}) => {
     );
   };
 
+  // const history = useHistory();
+
   
   return <div className='roomlist-background'>
               <div style={{display: 'flex', flexWrap: 'wrap', justifyContent: 'start'}}>
-                <div className="close" onClick={goToScreen}></div>
+                <div className="close" onClick={(e) => {goToScreen(e); }}></div>
                 <div style={{color: 'white', fontSize: '26px', marginTop: '40px'}}>
                   Add To Wish List
                 </div>

@@ -115,7 +115,10 @@ const Volume = ({ display, roomId, goToScreen }) => {
 
         return <div className='roomlist-background'>
               <div style={{display: 'flex', flexWrap: 'wrap', justifyContent: 'start'}}>
-                <div className="close" onClick={goToScreen}></div>
+                <div className="close" onClick={(e) => {
+                  goToScreen(e);
+                  history.go(0);
+                  }}></div>
                 <div style={{color: 'white', fontSize: '26px', marginTop: '40px'}}>
                   Listen to what others are talking about
                 </div>

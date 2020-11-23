@@ -1,10 +1,11 @@
 import React from 'react';
 import styled from 'styled-components';
 import other_tables from '../../assets/other_tables.svg';
-import heart from '../../assets/other_tables.svg';
+import heart from '../../assets/heart.svg';
 import mute from '../../assets/mute.svg';
-import volume from '../../assets/mute.svg';
+import volume from '../../assets/volume.svg';
 import logout from '../../assets/logout.svg';
+import mic from '../../assets/mic.svg';
 
 const BottomBar = ({
   clickChat,
@@ -25,7 +26,8 @@ const BottomBar = ({
         <CameraButton onClick={toggleCameraAudio} data-switch="audio">
           <div>
             {userVideoAudio.audio ? (
-              <FaIcon className="fas fa-microphone"></FaIcon>
+              // <FaIcon className="fas fa-microphone"></FaIcon>
+              <img src={mic} />
             ) : (
               // <FaIcon className="fas fa-microphone-slash"></FaIcon>
               <img src={mute} />

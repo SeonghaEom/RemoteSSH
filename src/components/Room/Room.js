@@ -386,7 +386,7 @@ const Room = (props) => {
         displayOtherTable ?
         <RoomList display={displayOtherTable} roomId={roomId} goToScreen={goToOtherTable}/> :
         displayVolume?
-        <Volume display={displayVolume}/> :
+        <Volume display={displayVolume} goToScreen={goToOtherTable}/> :
         <div className="room-display-every">
           <VideoContainer className='room-video-container'>
             {/* Current User Video */}
