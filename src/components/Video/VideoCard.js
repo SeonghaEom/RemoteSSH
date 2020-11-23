@@ -13,11 +13,15 @@ const VideoCard = (props) => {
   }, [peer]);
 
   return (
-    <Video
-      playsInline
-      autoPlay
-      ref={ref}
-    />
+    <div>
+      <Video
+        playsInline
+        autoPlay
+        ref={ref}
+      />
+
+      <p>test</p>
+    </div>
   );
 };
 

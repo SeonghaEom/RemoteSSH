@@ -14,7 +14,6 @@ import LandingPage from './components/LandingPage/LandingPage';
 import LoginPage from './components/LoginPage/LoginPage';
 import TopicSuggestion from './components/TopicSuggestion/TopicSuggestion'
 
-
 const mapStateToProps = state => ({
   ...state
 })

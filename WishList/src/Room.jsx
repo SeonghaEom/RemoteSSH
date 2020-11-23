@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 
 
-export default function Products({ setWishList, wishlist }) {
+export default function Room({ setWishList, wishlist }) {
   
   const [room] = useState([
     {

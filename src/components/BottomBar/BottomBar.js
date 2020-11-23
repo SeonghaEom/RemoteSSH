@@ -3,7 +3,9 @@ import styled from 'styled-components';
 
 const BottomBar = ({
   clickChat,
+  clickWish,
   goToBack,
+  goToOtherTable,
   toggleCameraAudio,
   userVideoAudio,
   clickScreenSharing,
@@ -48,6 +50,13 @@ const BottomBar = ({
           </div>
           Share Screen
         </ScreenButton>
+        <WishList onClick={clickWish}>
+          <div>
+            <FaIcon className="fas fa-heart"></FaIcon>
+          </div>
+          WishList
+        </WishList>
+        <OtherTable onClick={goToOtherTable}>OtherTable</OtherTable>
       </Center>
       <Right>
         <StopButton onClick={goToBack}>Stop</StopButton>
@@ -114,6 +123,39 @@ const ScreenButton = styled.div`
 
   .sharing {
     color: #ee2560;
+  }
+`;
+
+const WishList = styled.div`
+  width: auto;
+  border: none;
+  font-size: 0.9375rem;
+  padding: 5px;
+
+  :hover {
+    background-color: #77b7dd;
+    cursor: pointer;
+    border-radius: 15px;
+  }
+
+  .sharing {
+    color: #ee2560;
+  }
+`;
+
+const OtherTable = styled.div`
+  width: 75px;
+  height: 30px;
+  border: none;
+  font-size: 0.9375rem;
+  line-height: 30px;
+  margin-right: 15px;
+  background-color: #ee2560;
+  border-radius: 15px;
+
+  :hover {
+    background-color: #f25483;
+    cursor: pointer;
   }
 `;
 
