@@ -9,6 +9,7 @@ import AddWish from '../WishList/AddWish';
 import Wish from '../WishList/Wish';
 import RoomList from '../RoomList';
 import Layout from '../TopicModal/Layout'
+import wishicon from '../../assets/wish_red.svg';
 
 const Room = (props) => {
   var currentUser = sessionStorage.getItem('user');
@@ -202,9 +203,9 @@ const Room = (props) => {
 
   function createUserVideo(peer, index, arr) {
     return (
-      <VideoContainer>
+      <VideoContainer className='room-video-container'>
         <VideoBox
-          className={`width-peer${peers.length > 8 ? '' : peers.length}`}
+          className="room-video-box"
           onClick={expandScreen}
           key={index}
         >
@@ -212,15 +213,12 @@ const Room = (props) => {
           <FaIcon className="fas fa-expand" />
           <VideoCard key={index} peer={peer} number={arr.length} />
         </VideoBox>
-        <UserName>{peer.userName}</UserName>
+        <UserName className='room-username'>{peer.userName}</UserName>
         <UserFood>
               <img src={'https://images.pexels.com/photos/708587/pexels-photo-708587.jpeg?auto=compress&cs=tinysrgb&h=750&w=1260'} width="300" height="300" alt={peer.userName} />
         </UserFood>
         <AddButton onClick={clickAdd}>
-          <div>
-            <FaIcon className="fas fa-heart"></FaIcon>
-          </div>
-          AddWish
+          <img src={wishicon} alt="add wish"/>
         </AddButton>
         <AddWish displayAdd={displayAdd} wishlist={wishlist} setWishList={setWishList} userName={peer.userName} userFood={'https://images.pexels.com/photos/708587/pexels-photo-708587.jpeg?auto=compress&cs=tinysrgb&h=750&w=1260'} />
       </VideoContainer>
@@ -366,31 +364,30 @@ const Room = (props) => {
       <VideoAndBarContainer>
         {displayOtherTable ?
         <RoomList display={displayOtherTable} roomId={roomId} goToScreen={goToOtherTable}/> :
-        <VideoContainer>
+        <div>
+        <VideoContainer className='room-video-container'>
           {/* Current User Video */}
-          <VideoBox
-            className={`width-peer${peers.length > 8 ? '' : peers.length}`}
-          >
-            {userVideoAudio['localUser'].video ? null : (
-              <UserName>{currentUser}</UserName>
-            )}
-            <FaIcon className="fas fa-expand" />
-            <MyVideo
-              onClick={expandScreen}
-              ref={userVideoRef}
-              muted
-              autoPlay
-              playInline
+            <VideoBox
+            className='room-video-box'
+            >
+              <FaIcon className="fas fa-expand" />
+              <MyVideo
+                onClick={expandScreen}
+                ref={userVideoRef}
+                muted
+                autoPlay
+                playInline
             ></MyVideo>
-            <UserName>{currentUser}</UserName>
-            <UserFood>
-              <img src={'https://images.pexels.com/photos/708587/pexels-photo-708587.jpeg?auto=compress&cs=tinysrgb&h=750&w=1260'} width="300" height="300" alt={currentUser} />
+            </VideoBox>
+            <UserName className='room-userName'>{currentUser}</UserName>
+            <UserFood className='room-userFood'>
+              <img src={'https://images.pexels.com/photos/708587/pexels-photo-708587.jpeg?auto=compress&cs=tinysrgb&h=750&w=1260'} />
             </UserFood>
-          </VideoBox>
+          </VideoContainer>
           {/* Joined User Vidoe */}
           {peers &&
             peers.map((peer, index, arr) => createUserVideo(peer, index, arr))}
-        </VideoContainer>
+          </div>
         }
         <BottomBar
           clickScreenSharing={clickScreenSharing}
@@ -419,20 +416,11 @@ const RoomContainer = styled.div`
 `;
 
 const VideoContainer = styled.div`
-  max-width: 100%;
-  height: 92%;
-  display: flex;
-  flex-direction: row;
-  justify-content: space-around;
-  flex-wrap: wrap;
-  align-items: center;
-  padding: 15px;
-  box-sizing: border-box;
-  gap: 10px;
+
 `;
 
 const VideoAndBarContainer = styled.div`
-  position: relative;
+  // position: relative;
   width: 100%;
   height: 100vh;
 `;
@@ -440,32 +428,17 @@ const VideoAndBarContainer = styled.div`
 const MyVideo = styled.video``;
 
 const VideoBox = styled.div`
-  position: relative;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  > video {
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-  }
 
-  :hover {
-    > i {
-      display: block;
-    }
-  }
 `;
 
 const UserName = styled.div`
-  position: absolute;
-  font-size: calc(20px + 5vmin);
-  z-index: 1;
+
 `;
 
 const UserFood = styled.div`
   position: relative;
+
+  
 `;
 
 const AddButton = styled.div`
@@ -473,10 +446,9 @@ const AddButton = styled.div`
   border: none;
   font-size: 0.9375rem;
   padding: 5px;
-  background-color: #77b7dd;
   
   :hover {
-    background-color: #ee2560;
+    background-color: #5A38FD;
     cursor: pointer;
     border-radius: 15px;
   }
