@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useHistory } from 'react';
 import Peer from 'simple-peer';
 import styled from 'styled-components';
 import socket from '../../socket';
@@ -32,6 +32,7 @@ const Room = (props) => {
   const userStream = useRef();
   var roomId = props.match.params.roomId;
   console.log("Room ", sessionStorage);
+  
 
 
   useEffect(() => {
@@ -205,7 +206,7 @@ const Room = (props) => {
 
   function createUserVideo(peer, index, arr) {
     return (
-      <div>
+      <div >
       <VideoContainer className='room-video-container'>
         {displayWish ?
             <AddWish display ={displayAdd} setWishList={setWishList} wishlist={wishlist} userName={peer.userName} userFood={'https://images.pexels.com/photos/708587/pexels-photo-708587.jpeg?auto=compress&cs=tinysrgb&h=750&w=1260'} goToScreen={clickAdd} />:
@@ -384,9 +385,8 @@ const Room = (props) => {
         <AddWish display ={displayAdd} setWishList={setWishList} wishlist={wishlist} userName={currentUser} userFood={'https://images.pexels.com/photos/708587/pexels-photo-708587.jpeg?auto=compress&cs=tinysrgb&h=750&w=1260'} goToScreen={clickAdd} />:
         displayOtherTable ?
         <RoomList display={displayOtherTable} roomId={roomId} goToScreen={goToOtherTable}/> :
-          displayVolume?
-            <Volume display={displayVolume}/> 
-            :
+        displayVolume?
+        <Volume display={displayVolume}/> :
         <div className="room-display-every">
           <VideoContainer className='room-video-container'>
             {/* Current User Video */}
@@ -400,7 +400,7 @@ const Room = (props) => {
                   muted
                   autoPlay
                   playInline
-                  className = 'myvideo'
+                  // className = 'myvideo'
               ></MyVideo>
               </VideoBox>
               {/* <UserFood className='room-userFood'>
@@ -438,6 +438,7 @@ const RoomContainer = styled.div`
   max-height: 100vh;
   flex-direction: row;
   overflow: scroll;
+  background-color: #121A2D;
 `;
 
 const VideoContainer = styled.div`
