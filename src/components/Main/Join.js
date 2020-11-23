@@ -16,6 +16,8 @@ const Join = (props) => {
     console.log("query ",  query);
  
 
+    console.log("query ",  query);
+ 
     const [roomId, setRoomId] = useState(query.get('roomId') || '');
     const [userName, setUserName] = useState('');
 
