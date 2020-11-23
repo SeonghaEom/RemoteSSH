@@ -1,117 +1,76 @@
 import React, { useEffect, useState, useRef } from 'react';
 import styled from 'styled-components';
+import Form from 'react-bootstrap/Form'
+import {Link} from 'react-router-dom'
 import socket from '../../socket';
+import Modal from 'react-bootstrap/Modal';
 // import socket from '../../socket';
 
-const AddWish = ({ displayAdd, setWishList, wishlist, userName, userFood}) => {
+//for firebase
+// import firebase from '../../config/fbconfig'
+import storage from '../../config/fbconfig'
+import firestore from '../../config/fbconfig'
+import * as firebase from 'firebase'
 
-  const currentUser = sessionStorage.getItem('user');
+const AddWish = ({ display, setWishList, wishlist, userName, userFood, goToScreen}) => {
 
   const [room] = useState([
     {
       userName: userName,
       foodImage: userFood,
+      foodName: "",
     }
   ]);
+  
+  const [show, setShow] = useState(false);
+  
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
 
-  const addToWishList = (food, name) => {
+  const addToWishList = (food) => {
     let newWishList = [...wishlist];
     let foodWished = {
       ...food,
-      userdes: name, }
-    ;
+    }
     newWishList.push(foodWished);
     setWishList(newWishList);
-    displayAdd = false;
+    setTimeout(handleShow, 1000);
+    
   };
 
-  return (
-      <AddWishContainer className={displayAdd ? '' : 'width0'}>
-        <TopHeader>Add to Wish List</TopHeader>
-        <Row>
-          {room.map((food, idx) => (
-            <div className="food" display="flex" key={idx}>
-                  <p>{food.userName}</p>
-                  <img src={food.foodImage} width="300" height="300" alt={food.userName} />
-                  <label for="foodDes">Food name:</label>
-                  <input type="text" id="foodDes" name="foodDes"></input>
-                  <button onClick={()=>addToWishList(food, document.getElementById('foodDes'))}>
-                    Add to Wishlist
-                  </button>
-            </div>
-          ))}
-        </Row>
-      </AddWishContainer>
-  );
+  return <div className='roomlist-background'>
+              <div style={{display: 'flex', flexWrap: 'wrap', justifyContent: 'start'}}>
+                <div className="close" onClick={goToScreen}></div>
+                <div style={{color: 'white', fontSize: '26px', marginTop: '40px'}}>
+                  Add To Wish List
+                </div>
+              </div>
+              <div style={{display: 'flex', flexWrap: 'wrap', justifyContent: 'start'}} >
+                {room.map((food, idx) => (
+                  <div className="roomlist-container">
+                        <p>{food.userName}</p>
+                        <img src={food.foodImage} width="300" height="300" alt={food.userName} />
+                         <Form className="food-forms">
+                            <Form.Group controlId="formFoodName" className="form-basic">
+                                <div>
+                                  <Form.Label>Food Name</Form.Label>
+                                  <Form.Control type="text" id="foodname" 
+                                  placeholder="Example: DaehagSaeng Chicken" />
+                                </div>
+                            </Form.Group>
+                          </Form>
+                          <button className="primary-button" onClick={() => addToWishList({
+                            userName: food.userName,
+                            foodImage: food.foodImage,
+                            foodName: document.getElementById("foodname").value,
+                          })}>Add Food</button>
+                          <Modal show={show} onHide={handleClose}>
+                            <Modal.Body>Woohoo, you added something</Modal.Body>
+                          </Modal>
+                  </div>
+                ))}
+              </div>  
+          </div>;
 };
 
-const AddWishContainer = styled.div`
-  display: block;
-  width: 50%;
-  hieght: 100%;
-  background-color: white;
-  transition: all 0.5s ease;
-  overflow: hidden;
-`;
-
-const WishContainer = styled.div`
-  display: block;
-  width: 50%;
-  hieght: 100%;
-  background-color: white;
-  transition: all 0.5s ease;
-  overflow: hidden;
-`;
-
-const TopHeader = styled.div`
-  width: 100%;
-  margin-top: 15px;
-  font-weight: 600;
-  font-size: 20px;
-  color: black;
-`;
-
-
-const Row = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  margin-top: 15px;
-  line-height: 35px;
-`;
-
-const Label = styled.label``;
-
-const Input = styled.input`
-  width: 150px;
-  height: 35px;
-  margin-left: 15px;
-  padding-left: 10px;
-  outline: none;
-  border: none;
-  border-radius: 5px;
-`;
-
-const Error = styled.div`
-  margin-top: 10px;
-  font-size: 20px;
-  color: #e85a71;
-`;
-
-const JoinButton = styled.button`
-  height: 40px;
-  margin-top: 35px;
-  outline: none;
-  border: none;
-  border-radius: 15px;
-  color: #d8e9ef;
-  background-color: #4ea1d3;
-  font-size: 25px;
-  font-weight: 500;
-
-  :hover {
-    background-color: #7bb1d1;
-    cursor: pointer;
-  }
-`;
 export default AddWish;
