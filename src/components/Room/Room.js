@@ -207,14 +207,17 @@ const Room = (props) => {
     return (
       <div>
       <VideoContainer className='room-video-container'>
-        <VideoBox
-          className="room-video-box"
-          key={index}
-        >
-          {/* {writeUserName(peer.userName)} */}
-          {/* <FaIcon className="fas fa-expand" /> */}
-          <VideoCard key={index} peer={peer} number={arr.length} />
-        </VideoBox>
+        {displayWish ?
+            <AddWish display ={displayAdd} setWishList={setWishList} wishlist={wishlist} userName={peer.userName} userFood={'https://images.pexels.com/photos/708587/pexels-photo-708587.jpeg?auto=compress&cs=tinysrgb&h=750&w=1260'} goToScreen={clickAdd} />:
+          <VideoBox
+            className="room-video-box"
+            key={index}
+          >
+            {/* {writeUserName(peer.userName)} */}
+            {/* <FaIcon className="fas fa-expand" /> */}
+            <VideoCard key={index} peer={peer} number={arr.length} />
+          </VideoBox>
+        }
         <UserName className='room-userName'>{peer.userName}</UserName>
         {/* <UserFood className='room-userFood'>
               <img src={'https://img.etimg.com/thumb/msid-75176755,width-640,resizemode-4,imgsize-612672/effect-of-coronavirus-on-food.jpg'} width="300" height="300" alt={peer.userName} />
@@ -375,7 +378,11 @@ const Room = (props) => {
     <RoomContainer>
       <Layout/>
       <VideoAndBarContainer>
-        {displayOtherTable ?
+        {displayWish ?
+        <Wish display ={displayWish} setWishList={setWishList} wishlist={wishlist} goToScreen={clickWish} /> :
+        displayAdd ?
+        <AddWish display ={displayAdd} setWishList={setWishList} wishlist={wishlist} userName={currentUser} userFood={'https://images.pexels.com/photos/708587/pexels-photo-708587.jpeg?auto=compress&cs=tinysrgb&h=750&w=1260'} goToScreen={clickAdd} />:
+        displayOtherTable ?
         <RoomList display={displayOtherTable} roomId={roomId} goToScreen={goToOtherTable}/> :
           displayVolume?
             <Volume display={displayVolume}/> 
@@ -419,7 +426,6 @@ const Room = (props) => {
           screenShare={screenShare}
         />
       </VideoAndBarContainer>
-      <Wish displayWishlist={displayWish} wishlist={wishlist} setWishList={setWishList} />
       <Chat display={displayChat} roomId={roomId}/>
       
     </RoomContainer>
