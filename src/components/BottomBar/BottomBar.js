@@ -1,11 +1,17 @@
 import React from 'react';
 import styled from 'styled-components';
+import other_tables from '../../assets/other_tables.svg';
+import heart from '../../assets/other_tables.svg';
+import mute from '../../assets/mute.svg';
+import volume from '../../assets/mute.svg';
+import logout from '../../assets/logout.svg';
 
 const BottomBar = ({
   clickChat,
   clickWish,
   goToBack,
   goToOtherTable,
+  clickVolume,
   toggleCameraAudio,
   userVideoAudio,
   clickScreenSharing,
@@ -14,52 +20,48 @@ const BottomBar = ({
   return (
     <Bar>
       <Left>
-        <CameraButton onClick={toggleCameraAudio} data-switch="video">
-          <div>
-            {userVideoAudio.video ? (
-              <FaIcon className="fas fa-video"></FaIcon>
-            ) : (
-              <FaIcon className="fas fa-video-slash"></FaIcon>
-            )}
-          </div>
-          Camera
-        </CameraButton>
+      </Left>
+      <Center>
         <CameraButton onClick={toggleCameraAudio} data-switch="audio">
           <div>
             {userVideoAudio.audio ? (
               <FaIcon className="fas fa-microphone"></FaIcon>
             ) : (
-              <FaIcon className="fas fa-microphone-slash"></FaIcon>
+              // <FaIcon className="fas fa-microphone-slash"></FaIcon>
+              <img src={mute} />
             )}
           </div>
           Audio
         </CameraButton>
-      </Left>
-      <Center>
-        <ChatButton onClick={clickChat}>
-          <div>
-            <FaIcon className="fas fa-comments"></FaIcon>
-          </div>
-          Chat
-        </ChatButton>
-        <ScreenButton onClick={clickScreenSharing}>
-          <div>
-            <FaIcon
-              className={`fas fa-desktop ${screenShare ? 'sharing' : ''}`}
-            ></FaIcon>
-          </div>
-          Share Screen
-        </ScreenButton>
         <WishList onClick={clickWish}>
           <div>
-            <FaIcon className="fas fa-heart"></FaIcon>
+            {/* <FaIcon className="fas fa-heart"></FaIcon> */}
+            <img src={heart} />
           </div>
-          WishList
+          Wish List
         </WishList>
-        <OtherTable onClick={goToOtherTable}>OtherTable</OtherTable>
+        <OtherTable onClick={goToOtherTable}>
+          <div >
+            <img src={other_tables} />
+          </div>
+          Other Table
+        </OtherTable>
+        <WishList onClick={clickVolume}>
+          <div>
+            {/* <FaIcon className="fa fa-volume-up"></FaIcon> */}
+            <img src={volume} />
+          </div>
+          Table Volume
+        </WishList>
+      
       </Center>
       <Right>
-        <StopButton onClick={goToBack}>Stop</StopButton>
+        <StopButton onClick={goToBack}>
+          <div>
+            <img src={logout} />
+          </div>
+          Stop
+        </StopButton>
       </Right>
     </Bar>
   );
@@ -75,7 +77,7 @@ const Bar = styled.div`
   justify-content: center;
   align-items: center;
   font-weight: 500;
-  background-color: #4ea1d3;
+  background-color: #ffffff;
 `;
 const Left = styled.div`
   display: flex;
@@ -92,39 +94,6 @@ const Center = styled.div`
 
 const Right = styled.div``;
 
-const ChatButton = styled.div`
-  width: 75px;
-  border: none;
-  font-size: 0.9375rem;
-  padding: 5px;
-
-  :hover {
-    background-color: #77b7dd;
-    cursor: pointer;
-    border-radius: 15px;
-  }
-
-  * {
-    pointer-events: none;
-  }
-`;
-
-const ScreenButton = styled.div`
-  width: auto;
-  border: none;
-  font-size: 0.9375rem;
-  padding: 5px;
-
-  :hover {
-    background-color: #77b7dd;
-    cursor: pointer;
-    border-radius: 15px;
-  }
-
-  .sharing {
-    color: #ee2560;
-  }
-`;
 
 const WishList = styled.div`
   width: auto;
@@ -144,44 +113,7 @@ const WishList = styled.div`
 `;
 
 const OtherTable = styled.div`
-  width: 75px;
-  height: 30px;
-  border: none;
-  font-size: 0.9375rem;
-  line-height: 30px;
-  margin-right: 15px;
-  background-color: #ee2560;
-  border-radius: 15px;
-
-  :hover {
-    background-color: #f25483;
-    cursor: pointer;
-  }
-`;
-
-const FaIcon = styled.i`
-  width: 30px;
-  font-size: calc(16px + 1vmin);
-`;
-
-const StopButton = styled.div`
-  width: 75px;
-  height: 30px;
-  border: none;
-  font-size: 0.9375rem;
-  line-height: 30px;
-  margin-right: 15px;
-  background-color: #ee2560;
-  border-radius: 15px;
-
-  :hover {
-    background-color: #f25483;
-    cursor: pointer;
-  }
-`;
-
-const CameraButton = styled.div`
-  width: 75px;
+  width: auto;
   border: none;
   font-size: 0.9375rem;
   padding: 5px;
@@ -192,15 +124,47 @@ const CameraButton = styled.div`
     border-radius: 15px;
   }
 
-  * {
-    pointer-events: none;
-  }
-
-  .fa-microphone-slash {
+  .sharing {
     color: #ee2560;
   }
+`;
 
-  .fa-video-slash {
+const FaIcon = styled.i`
+  width: 30px;
+  font-size: calc(16px + 1vmin);
+`;
+
+const StopButton = styled.div`
+  width: auto;
+  border: none;
+  font-size: 0.9375rem;
+  padding: 5px;
+  margin-right: 10px;
+
+  :hover {
+    background-color: #77b7dd;
+    cursor: pointer;
+    border-radius: 15px;
+  }
+
+  .sharing {
+    color: #ee2560;
+  }
+`;
+
+const CameraButton = styled.div`
+  width: auto;
+  border: none;
+  font-size: 0.9375rem;
+  padding: 5px;
+
+  :hover {
+    background-color: #77b7dd;
+    cursor: pointer;
+    border-radius: 15px;
+  }
+
+  .sharing {
     color: #ee2560;
   }
 `;

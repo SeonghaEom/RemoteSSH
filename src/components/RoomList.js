@@ -7,6 +7,8 @@ const RoomList = ({ display, roomId, goToScreen }) => {
 
     const [roomList, setRoomList] = useState([]);
     const [userList, setUserList] = useState([]);
+    let history = useHistory()
+
 
     useEffect(() => {
       async function fetchData(){
@@ -34,7 +36,6 @@ const RoomList = ({ display, roomId, goToScreen }) => {
 
     }, []);
 
-    const history = useHistory();
 
     function drawUsers(users){
       return (
@@ -51,6 +52,11 @@ const RoomList = ({ display, roomId, goToScreen }) => {
             : <div>Loading</div>)}
         </div>
       )
+    };
+
+    function Close(){
+      // goToScreen;
+      history.go(0);
     }
 
 // Room list from server
@@ -62,7 +68,10 @@ const RoomList = ({ display, roomId, goToScreen }) => {
 
         return <div className='roomlist-background'>
               <div style={{display: 'flex', flexWrap: 'wrap', justifyContent: 'start'}}>
-                <div className="close" onClick={goToScreen}></div>
+                <div className="close" onClick={(e) => {
+                  goToScreen(e);
+                  history.go(0);
+                }}></div>
                 <div style={{color: 'white', fontSize: '26px', marginTop: '40px'}}>
                   Change Tables
                 </div>
@@ -81,7 +90,9 @@ const RoomList = ({ display, roomId, goToScreen }) => {
                             </div>
                             <div className="join-table"
                                 onClick={() => {
-                                    history.push('room/'+ roomuser.roomId);
+                                    history.replace(roomuser.roomId);
+                                    // window.location.href='room/' + roomuser.roomId;
+                                    history.go(0);
                                     
                                 }} 
                             >Join Table</div>
