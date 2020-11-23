@@ -7,7 +7,11 @@ import BottomBar from '../BottomBar/BottomBar';
 import Chat from '../Chat/Chat';
 import AddWish from '../WishList/AddWish';
 import Wish from '../WishList/Wish';
+<<<<<<< HEAD
 import RoomList from '../RoomList';
+=======
+import Layout from '../TopicModal/Layout'
+>>>>>>> 3220fdaa96477a7e2513b7480cb0d83f569415b9
 
 const Room = (props) => {
   var currentUser = sessionStorage.getItem('user');
@@ -361,6 +365,7 @@ const Room = (props) => {
 
   return (
     <RoomContainer>
+      <Layout/>
       <VideoAndBarContainer>
         {displayOtherTable ?
         <RoomList display={displayOtherTable} roomId={roomId} goToScreen={goToOtherTable}/> :
@@ -384,12 +389,6 @@ const Room = (props) => {
             <UserFood>
               <img src={'https://images.pexels.com/photos/708587/pexels-photo-708587.jpeg?auto=compress&cs=tinysrgb&h=750&w=1260'} width="300" height="300" alt={currentUser} />
             </UserFood>
-            <AddButton onClick={clickAdd}>
-            <div>
-              <FaIcon className="fas fa-heart"></FaIcon>
-            </div>
-            AddWish
-          </AddButton>
           </VideoBox>
           {/* Joined User Vidoe */}
           {peers &&
@@ -407,7 +406,6 @@ const Room = (props) => {
           screenShare={screenShare}
         />
       </VideoAndBarContainer>
-      {/* <AddWish displayAdd={displayAdd} wishlist={wishlist} setWishList={setWishList} /> */}
       <Wish displayWishlist={displayWish} wishlist={wishlist} setWishList={setWishList} />
       <Chat display={displayChat} roomId={roomId}/>
       
