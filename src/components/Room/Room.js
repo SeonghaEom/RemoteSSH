@@ -203,25 +203,31 @@ const Room = (props) => {
 
   function createUserVideo(peer, index, arr) {
     return (
+      <div>
       <VideoContainer className='room-video-container'>
         <VideoBox
           className="room-video-box"
-          onClick={expandScreen}
           key={index}
         >
-          {writeUserName(peer.userName)}
-          <FaIcon className="fas fa-expand" />
+          {/* {writeUserName(peer.userName)} */}
+          {/* <FaIcon className="fas fa-expand" /> */}
           <VideoCard key={index} peer={peer} number={arr.length} />
         </VideoBox>
-        <UserName className='room-username'>{peer.userName}</UserName>
-        <UserFood>
-              <img src={'https://images.pexels.com/photos/708587/pexels-photo-708587.jpeg?auto=compress&cs=tinysrgb&h=750&w=1260'} width="300" height="300" alt={peer.userName} />
-        </UserFood>
-        <AddButton onClick={clickAdd}>
+        <UserName className='room-userName'>{peer.userName}</UserName>
+        {/* <UserFood className='room-userFood'>
+              <img src={'https://img.etimg.com/thumb/msid-75176755,width-640,resizemode-4,imgsize-612672/effect-of-coronavirus-on-food.jpg'} width="300" height="300" alt={peer.userName} />
+        </UserFood> */}
+        <AddButton className='room-wishlist-addbutton' onClick={clickAdd}>
           <img src={wishicon} alt="add wish"/>
         </AddButton>
-        <AddWish displayAdd={displayAdd} wishlist={wishlist} setWishList={setWishList} userName={peer.userName} userFood={'https://images.pexels.com/photos/708587/pexels-photo-708587.jpeg?auto=compress&cs=tinysrgb&h=750&w=1260'} />
       </VideoContainer>
+          {/* <AddWish 
+          displayAdd={displayAdd}
+          wishlist={wishlist}
+          setWishList={setWishList}
+          userName={peer.userName}
+          userFood={wishicon} /> */}
+        </div>
     );
   }
 
@@ -364,30 +370,32 @@ const Room = (props) => {
       <VideoAndBarContainer>
         {displayOtherTable ?
         <RoomList display={displayOtherTable} roomId={roomId} goToScreen={goToOtherTable}/> :
-        <div>
-        <VideoContainer className='room-video-container'>
-          {/* Current User Video */}
-            <VideoBox
-            className='room-video-box'
-            >
-              <FaIcon className="fas fa-expand" />
-              <MyVideo
-                onClick={expandScreen}
-                ref={userVideoRef}
-                muted
-                autoPlay
-                playInline
-            ></MyVideo>
-            </VideoBox>
-            <UserName className='room-userName'>{currentUser}</UserName>
-            <UserFood className='room-userFood'>
-              <img src={'https://images.pexels.com/photos/708587/pexels-photo-708587.jpeg?auto=compress&cs=tinysrgb&h=750&w=1260'} />
-            </UserFood>
+        <div className="room-display-every">
+          <VideoContainer className='room-video-container'>
+            {/* Current User Video */}
+              <VideoBox
+              className='room-video-box'
+              >
+                <FaIcon className="fas fa-expand" />
+                <MyVideo
+                  onClick={expandScreen}
+                  ref={userVideoRef}
+                  muted
+                  autoPlay
+                  playInline
+                  className = 'myvideo'
+              ></MyVideo>
+              </VideoBox>
+              {/* <UserFood className='room-userFood'>
+                <img src={'https://thumbs.dreamstime.com/b/liver-detox-diet-food-concept-fruits-vegetables-nuts-olive-oil-garlic-cleansing-body-healthy-eating-top-view-flat-lay-liver-166983115.jpg'} />
+              </UserFood> */}
+              <UserName className='room-userName'>{currentUser}</UserName>
+
           </VideoContainer>
-          {/* Joined User Vidoe */}
-          {peers &&
-            peers.map((peer, index, arr) => createUserVideo(peer, index, arr))}
-          </div>
+            {/* Joined User Vidoe */}
+            {peers &&
+              peers.map((peer, index, arr) => createUserVideo(peer, index, arr))}
+        </div>
         }
         <BottomBar
           clickScreenSharing={clickScreenSharing}
@@ -412,7 +420,7 @@ const RoomContainer = styled.div`
   width: 100%;
   max-height: 100vh;
   flex-direction: row;
-  overflow: invisible;
+  overflow: scroll;
 `;
 
 const VideoContainer = styled.div`
@@ -436,26 +444,10 @@ const UserName = styled.div`
 `;
 
 const UserFood = styled.div`
-  position: relative;
-
   
 `;
 
 const AddButton = styled.div`
-  width: auto;
-  border: none;
-  font-size: 0.9375rem;
-  padding: 5px;
-  
-  :hover {
-    background-color: #5A38FD;
-    cursor: pointer;
-    border-radius: 15px;
-  }
-
-  .sharing {
-    color: #ee2560;
-  }
 `;
 
 const FaIcon = styled.i`

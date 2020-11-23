@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React, { Component, useState } from 'react'
 import NavbarEmpty from '../Navbar/NavbarEmpty'
 import TopicCard from './TopicCard'
 
@@ -6,7 +6,7 @@ import TopicCard from './TopicCard'
 import firebase from '../../config/fbconfig'
 import storage from '../../config/fbconfig'
 import firestore from '../../config/fbconfig'
-import GetTopics from './GetTopics'
+// import GetTopics from './GetTopics'
 
 // export default class TopicSuggestion extends Component {
 //     constructor() {
@@ -100,7 +100,7 @@ import GetTopics from './GetTopics'
 // }
 
 export default function TopicSuggestion() {
-    const [topicList, setTopicList] = userState();
+    const [topicList, setTopicList] = useState([]);
     return (
         <div>
             
