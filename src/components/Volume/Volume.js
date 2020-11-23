@@ -44,7 +44,7 @@ const Volume = ({ display, roomId, goToScreen }) => {
             handle: { id, value, percent },
             getHandleProps
           }) {
-              console.log(id)
+            
             talk1.volume=value/10
             return (
               <div
@@ -103,14 +103,15 @@ const Volume = ({ display, roomId, goToScreen }) => {
 
     const history = useHistory();
 
+    //console.log(roomList)
     
 
 //Room list from server
-        fetch('http://localhost:9000/room-list').then(r =>
-            r.json()
-        ).then(roomList => {
-            setRoomList(roomList);
-        })
+        // fetch('http://localhost:9000/room-list').then(r =>
+        //     r.json()
+        // ).then(roomList => {
+        //     setRoomList(roomList);
+        // })
 
         return <div className='roomlist-background'>
               <div style={{display: 'flex', flexWrap: 'wrap', justifyContent: 'start'}}>
