@@ -156,7 +156,7 @@ const Volume = ({ display, roomId, goToScreen }) => {
                             </div>
                            
                         </div>
-                        : <div>There are no other rooms</div>)
+                        : <div className="roomlist-container">There are no other rooms</div>)
                 }
             </div>
         </div>
