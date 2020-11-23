@@ -6,7 +6,6 @@ import TopicCard from './TopicCard'
 import firebase from '../../config/fbconfig'
 import storage from '../../config/fbconfig'
 import firestore from '../../config/fbconfig'
-// import GetTopics from './GetTopics'
 
 // export default class TopicSuggestion extends Component {
 //     constructor() {
@@ -100,7 +99,7 @@ import firestore from '../../config/fbconfig'
 // }
 
 export default function TopicSuggestion() {
-    const [topicList, setTopicList] = useState([]);
+    const [topicList, setTopicList] = useState();
     return (
         <div>
             

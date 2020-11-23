@@ -10,6 +10,7 @@ import Wish from '../WishList/Wish';
 import RoomList from '../RoomList';
 import Layout from '../TopicModal/Layout'
 import wishicon from '../../assets/wish_red.svg';
+import Volume from '../Volume/Volume'
 
 const Room = (props) => {
   var currentUser = sessionStorage.getItem('user');
@@ -20,6 +21,7 @@ const Room = (props) => {
   const [wishlist, setWishList] = useState([]);
   const [displayChat, setDisplayChat] = useState(false);
   const [displayWish, setDisplayWish] = useState(false);
+  const [displayVolume, setDisplayVolume] = useState(false);
   const [displayOtherTable, setDisplayOtherTable] = useState(false);
   const [displayAdd, setDisplayAdd] = useState(false);
   const [screenShare, setScreenShare] = useState(false);
@@ -256,6 +258,11 @@ const Room = (props) => {
     setDisplayAdd(!displayAdd);
   };
 
+  const clickVolume = (e) => {
+    e.stopPropagation();
+    setDisplayVolume(!displayVolume);
+  };
+
   // BackButton
   const goToOtherTable = (e) => {
     e.stopPropagation();
@@ -370,6 +377,9 @@ const Room = (props) => {
       <VideoAndBarContainer>
         {displayOtherTable ?
         <RoomList display={displayOtherTable} roomId={roomId} goToScreen={goToOtherTable}/> :
+          displayVolume?
+            <Volume display={displayVolume}/> 
+            :
         <div className="room-display-every">
           <VideoContainer className='room-video-container'>
             {/* Current User Video */}
@@ -404,6 +414,7 @@ const Room = (props) => {
           goToBack={goToBack}
           goToOtherTable={goToOtherTable}
           toggleCameraAudio={toggleCameraAudio}
+          clickVolume={clickVolume}
           userVideoAudio={userVideoAudio['localUser']}
           screenShare={screenShare}
         />
