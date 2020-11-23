@@ -7,11 +7,8 @@ import BottomBar from '../BottomBar/BottomBar';
 import Chat from '../Chat/Chat';
 import AddWish from '../WishList/AddWish';
 import Wish from '../WishList/Wish';
-<<<<<<< HEAD
 import RoomList from '../RoomList';
-=======
 import Layout from '../TopicModal/Layout'
->>>>>>> 3220fdaa96477a7e2513b7480cb0d83f569415b9
 
 const Room = (props) => {
   var currentUser = sessionStorage.getItem('user');
