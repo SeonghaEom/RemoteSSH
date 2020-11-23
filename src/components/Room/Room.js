@@ -203,26 +203,28 @@ const Room = (props) => {
   function createUserVideo(peer, index, arr) {
     return (
       <VideoContainer>
-        <VideoBox
-          className={`width-peer${peers.length > 8 ? '' : peers.length}`}
-          onClick={expandScreen}
-          key={index}
-        >
-          {writeUserName(peer.userName)}
-          <FaIcon className="fas fa-expand" />
-          <VideoCard key={index} peer={peer} number={arr.length} />
-        </VideoBox>
-        <UserName>{peer.userName}</UserName>
-        <UserFood>
-              <img src={'https://images.pexels.com/photos/708587/pexels-photo-708587.jpeg?auto=compress&cs=tinysrgb&h=750&w=1260'} width="300" height="300" alt={peer.userName} />
-        </UserFood>
-        <AddButton onClick={clickAdd}>
-          <div>
-            <FaIcon className="fas fa-heart"></FaIcon>
-          </div>
-          AddWish
-        </AddButton>
-        <AddWish displayAdd={displayAdd} wishlist={wishlist} setWishList={setWishList} userName={peer.userName} userFood={'https://images.pexels.com/photos/708587/pexels-photo-708587.jpeg?auto=compress&cs=tinysrgb&h=750&w=1260'} />
+        {displayWish ?
+          <AddWish display ={displayAdd} setWishList={setWishList} wishlist={wishlist} userName={peer.userName} userFood={'https://images.pexels.com/photos/708587/pexels-photo-708587.jpeg?auto=compress&cs=tinysrgb&h=750&w=1260'} goToScreen={clickAdd} />:
+          <VideoBox
+            className={`width-peer${peers.length > 8 ? '' : peers.length}`}
+            onClick={expandScreen}
+            key={index}
+          >
+            {writeUserName(peer.userName)}
+            <FaIcon className="fas fa-expand" />
+            <VideoCard key={index} peer={peer} number={arr.length} />
+          </VideoBox>
+          }
+          <UserName>{peer.userName}</UserName>
+          <UserFood>
+                <img src={'https://images.pexels.com/photos/708587/pexels-photo-708587.jpeg?auto=compress&cs=tinysrgb&h=750&w=1260'} width="300" height="300" alt={peer.userName} />
+          </UserFood>
+          <AddButton onClick={clickAdd}>
+            <div>
+              <FaIcon className="fas fa-heart"></FaIcon>
+            </div>
+            AddWish
+          </AddButton>
       </VideoContainer>
     );
   }
@@ -364,7 +366,11 @@ const Room = (props) => {
     <RoomContainer>
       <Layout/>
       <VideoAndBarContainer>
-        {displayOtherTable ?
+        {displayWish ?
+        <Wish display ={displayWish} setWishList={setWishList} wishlist={wishlist} goToScreen={clickWish} /> :
+        displayAdd ?
+        <AddWish display ={displayAdd} setWishList={setWishList} wishlist={wishlist} userName={currentUser} userFood={'https://images.pexels.com/photos/708587/pexels-photo-708587.jpeg?auto=compress&cs=tinysrgb&h=750&w=1260'} goToScreen={clickAdd} />:
+        displayOtherTable ?
         <RoomList display={displayOtherTable} roomId={roomId} goToScreen={goToOtherTable}/> :
         <VideoContainer>
           {/* Current User Video */}
@@ -386,6 +392,12 @@ const Room = (props) => {
             <UserFood>
               <img src={'https://images.pexels.com/photos/708587/pexels-photo-708587.jpeg?auto=compress&cs=tinysrgb&h=750&w=1260'} width="300" height="300" alt={currentUser} />
             </UserFood>
+            <AddButton onClick={clickAdd}>
+              <div>
+                <FaIcon className="fas fa-heart"></FaIcon>
+              </div>
+              AddWish
+            </AddButton>
           </VideoBox>
           {/* Joined User Vidoe */}
           {peers &&
@@ -403,7 +415,6 @@ const Room = (props) => {
           screenShare={screenShare}
         />
       </VideoAndBarContainer>
-      <Wish displayWishlist={displayWish} wishlist={wishlist} setWishList={setWishList} />
       <Chat display={displayChat} roomId={roomId}/>
       
     </RoomContainer>
