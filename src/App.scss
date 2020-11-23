@@ -1,0 +1,150 @@
+//Google fonts
+@import 
+url('https://fonts.googleapis.com/css2?family=Karla:wght@400;700&display=swap');
+
+//Font variables
+$global-font: 'Karla', sans-serif;
+
+//Global Styles
+* {
+    font-family: 'Karla', sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+div h1 {
+    font-size: 60px;
+}
+
+div h2 { 
+    color: #5452F6;
+    font-weight: 700;
+    text-transform: up;
+}
+
+//Buttons
+.primary-button { 
+    padding: 15px 52px;
+    background-color :#5A38FD;
+    color: #fff;
+    font-weight: 700;
+    border: none;
+    border-radius: 10px;
+}
+
+.secondary-button{
+    padding: 15px 52px;
+    background-color: rgba(90, 56, 253, 0.2);
+    color: #5A38FD;
+    font-weight: 700;
+    border: none;
+    border-radius: 10px;
+}
+
+//Landing Page
+.navbar{
+    min-height: 6vh;
+    padding: 10px 52px!important;
+    font-size: 16px;
+
+    .nav-link { 
+        color: #000;
+    }
+}
+
+.intro { 
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    align-items: center;
+    height: 94vh;
+    justify-content: center;
+}
+
+.intro img {
+    height: 50vh;
+}
+
+#features { 
+    margin: 2em;
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    align-items: center;
+}
+
+.feature-point {
+    margin: 2em;
+}
+
+//about us
+#about-us {
+    display: flex;
+    flex-direction: column;
+    text-align: center;
+    height: 50vh;
+    justify-content: center;
+
+}
+
+.landing-footer { 
+    text-align: center;
+    // height: 5vh;
+    background-color: #5A38FD;
+    color: #fff;
+    padding: 3em;
+    font-weight: 700;
+}
+
+
+//login page
+.form-basic {
+    display: flex;
+    width: 50%;
+}
+
+.form-basic div:nth-child(1) { 
+    flex: 1;
+}
+
+.separator { 
+    padding: 0 1em;
+}
+
+.photo-upload { 
+    flex: 1;
+}
+
+.form-file { 
+    height: 100%;
+    align-items: center;
+    justify-content: center;
+}
+
+
+// login page
+.login-forms { 
+    display: flex;
+    flex-direction: column;
+    // justify-content: center;
+    align-items: center;
+    // height: 94vh;
+    margin: 3em 0;
+}
+
+.topic-form { 
+    width: 50%;
+}
+
+.form-nav { 
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.demo-alert { 
+    background-color: rgba(90, 56, 253, 0.2);
+    color: #5A38FD;
+    text-align: center;
+}
