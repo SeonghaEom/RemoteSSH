@@ -7,6 +7,7 @@ import BottomBar from '../BottomBar/BottomBar';
 import Chat from '../Chat/Chat';
 import AddWish from '../WishList/AddWish';
 import Wish from '../WishList/Wish';
+import Layout from '../TopicModal/Layout'
 
 const Room = (props) => {
   var currentUser = sessionStorage.getItem('user');
@@ -347,6 +348,7 @@ const Room = (props) => {
 
   return (
     <RoomContainer>
+      <Layout/>
       <VideoAndBarContainer>
         <VideoContainer>
           {/* Current User Video */}
@@ -368,12 +370,6 @@ const Room = (props) => {
             <UserFood>
               <img src={'https://images.pexels.com/photos/708587/pexels-photo-708587.jpeg?auto=compress&cs=tinysrgb&h=750&w=1260'} width="300" height="300" alt={currentUser} />
             </UserFood>
-            <AddButton onClick={clickAdd}>
-            <div>
-              <FaIcon className="fas fa-heart"></FaIcon>
-            </div>
-            AddWish
-          </AddButton>
           </VideoBox>
           {/* Joined User Vidoe */}
           {peers &&
@@ -389,7 +385,6 @@ const Room = (props) => {
           screenShare={screenShare}
         />
       </VideoAndBarContainer>
-      {/* <AddWish displayAdd={displayAdd} wishlist={wishlist} setWishList={setWishList} /> */}
       <Wish displayWishlist={displayWish} wishlist={wishlist} setWishList={setWishList} />
       <Chat display={displayChat} roomId={roomId} />
     </RoomContainer>
