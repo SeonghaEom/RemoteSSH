@@ -5,6 +5,8 @@ import socket from '../../socket';
 import VideoCard from '../Video/VideoCard';
 import BottomBar from '../BottomBar/BottomBar';
 import Chat from '../Chat/Chat';
+import AddWish from '../WishList/AddWish';
+import Wish from '../WishList/Wish';
 
 const Room = (props) => {
   var currentUser = sessionStorage.getItem('user');
@@ -12,7 +14,10 @@ const Room = (props) => {
   const [userVideoAudio, setUserVideoAudio] = useState({
     localUser: { video: true, audio: true },
   });
+  const [wishlist, setWishList] = useState([]);
   const [displayChat, setDisplayChat] = useState(false);
+  const [displayWish, setDisplayWish] = useState(false)
+  const [displayAdd, setDisplayAdd] = useState(false)
   const [screenShare, setScreenShare] = useState(false);
   const peersRef = useRef([]);
   const userVideoRef = useRef();
@@ -193,15 +198,28 @@ const Room = (props) => {
 
   function createUserVideo(peer, index, arr) {
     return (
-      <VideoBox
-        className={`width-peer${peers.length > 8 ? '' : peers.length}`}
-        onClick={expandScreen}
-        key={index}
-      >
-        {writeUserName(peer.userName)}
-        <FaIcon className="fas fa-expand" />
-        <VideoCard key={index} peer={peer} number={arr.length} />
-      </VideoBox>
+      <VideoContainer>
+        <VideoBox
+          className={`width-peer${peers.length > 8 ? '' : peers.length}`}
+          onClick={expandScreen}
+          key={index}
+        >
+          {writeUserName(peer.userName)}
+          <FaIcon className="fas fa-expand" />
+          <VideoCard key={index} peer={peer} number={arr.length} />
+        </VideoBox>
+        <UserName>{peer.userName}</UserName>
+        <UserFood>
+              <img src={'https://images.pexels.com/photos/708587/pexels-photo-708587.jpeg?auto=compress&cs=tinysrgb&h=750&w=1260'} width="300" height="300" alt={peer.userName} />
+        </UserFood>
+        <AddButton onClick={clickAdd}>
+          <div>
+            <FaIcon className="fas fa-heart"></FaIcon>
+          </div>
+          AddWish
+        </AddButton>
+        <AddWish displayAdd={displayAdd} wishlist={wishlist} setWishList={setWishList} userName={peer.userName} userFood={'https://images.pexels.com/photos/708587/pexels-photo-708587.jpeg?auto=compress&cs=tinysrgb&h=750&w=1260'} />
+      </VideoContainer>
     );
   }
 
@@ -217,6 +235,16 @@ const Room = (props) => {
   const clickChat = (e) => {
     e.stopPropagation();
     setDisplayChat(!displayChat);
+  };
+
+  const clickWish = (e) => {
+    e.stopPropagation();
+    setDisplayWish(!displayWish);
+  };
+
+  const clickAdd = (e) => {
+    e.stopPropagation();
+    setDisplayAdd(!displayAdd);
   };
 
   // BackButton
@@ -336,6 +364,16 @@ const Room = (props) => {
               autoPlay
               playInline
             ></MyVideo>
+            <UserName>{currentUser}</UserName>
+            <UserFood>
+              <img src={'https://images.pexels.com/photos/708587/pexels-photo-708587.jpeg?auto=compress&cs=tinysrgb&h=750&w=1260'} width="300" height="300" alt={currentUser} />
+            </UserFood>
+            <AddButton onClick={clickAdd}>
+            <div>
+              <FaIcon className="fas fa-heart"></FaIcon>
+            </div>
+            AddWish
+          </AddButton>
           </VideoBox>
           {/* Joined User Vidoe */}
           {peers &&
@@ -344,12 +382,15 @@ const Room = (props) => {
         <BottomBar
           clickScreenSharing={clickScreenSharing}
           clickChat={clickChat}
+          clickWish={clickWish}
           goToBack={goToBack}
           toggleCameraAudio={toggleCameraAudio}
           userVideoAudio={userVideoAudio['localUser']}
           screenShare={screenShare}
         />
       </VideoAndBarContainer>
+      {/* <AddWish displayAdd={displayAdd} wishlist={wishlist} setWishList={setWishList} /> */}
+      <Wish displayWishlist={displayWish} wishlist={wishlist} setWishList={setWishList} />
       <Chat display={displayChat} roomId={roomId} />
     </RoomContainer>
   );
@@ -406,6 +447,28 @@ const UserName = styled.div`
   position: absolute;
   font-size: calc(20px + 5vmin);
   z-index: 1;
+`;
+
+const UserFood = styled.div`
+  position: relative;
+`;
+
+const AddButton = styled.div`
+  width: auto;
+  border: none;
+  font-size: 0.9375rem;
+  padding: 5px;
+  background-color: #77b7dd;
+  
+  :hover {
+    background-color: #ee2560;
+    cursor: pointer;
+    border-radius: 15px;
+  }
+
+  .sharing {
+    color: #ee2560;
+  }
 `;
 
 const FaIcon = styled.i`

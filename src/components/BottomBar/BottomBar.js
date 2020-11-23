@@ -3,6 +3,7 @@ import styled from 'styled-components';
 
 const BottomBar = ({
   clickChat,
+  clickWish,
   goToBack,
   toggleCameraAudio,
   userVideoAudio,
@@ -48,6 +49,12 @@ const BottomBar = ({
           </div>
           Share Screen
         </ScreenButton>
+        <WishList onClick={clickWish}>
+          <div>
+            <FaIcon className="fas fa-heart"></FaIcon>
+          </div>
+          WishList
+        </WishList>
       </Center>
       <Right>
         <StopButton onClick={goToBack}>Stop</StopButton>
@@ -101,6 +108,23 @@ const ChatButton = styled.div`
 `;
 
 const ScreenButton = styled.div`
+  width: auto;
+  border: none;
+  font-size: 0.9375rem;
+  padding: 5px;
+
+  :hover {
+    background-color: #77b7dd;
+    cursor: pointer;
+    border-radius: 15px;
+  }
+
+  .sharing {
+    color: #ee2560;
+  }
+`;
+
+const WishList = styled.div`
   width: auto;
   border: none;
   font-size: 0.9375rem;
