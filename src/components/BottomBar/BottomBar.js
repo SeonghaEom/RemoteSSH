@@ -6,6 +6,7 @@ const BottomBar = ({
   clickWish,
   goToBack,
   goToOtherTable,
+  clickVolume,
   toggleCameraAudio,
   userVideoAudio,
   clickScreenSharing,
@@ -57,6 +58,13 @@ const BottomBar = ({
           WishList
         </WishList>
         <OtherTable onClick={goToOtherTable}>OtherTable</OtherTable>
+        <WishList onClick={clickVolume}>
+          <div>
+            <FaIcon className="fa fa-volume-up"></FaIcon>
+          </div>
+          Other Rooms
+        </WishList>
+      
       </Center>
       <Right>
         <StopButton onClick={goToBack}>Stop</StopButton>

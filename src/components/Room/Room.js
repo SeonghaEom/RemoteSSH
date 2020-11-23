@@ -9,6 +9,7 @@ import AddWish from '../WishList/AddWish';
 import Wish from '../WishList/Wish';
 import RoomList from '../RoomList';
 import Layout from '../TopicModal/Layout'
+import Volume from '../Volume/Volume'
 
 const Room = (props) => {
   var currentUser = sessionStorage.getItem('user');
@@ -19,6 +20,7 @@ const Room = (props) => {
   const [wishlist, setWishList] = useState([]);
   const [displayChat, setDisplayChat] = useState(false);
   const [displayWish, setDisplayWish] = useState(false);
+  const [displayVolume, setDisplayVolume] = useState(false);
   const [displayOtherTable, setDisplayOtherTable] = useState(false);
   const [displayAdd, setDisplayAdd] = useState(false);
   const [screenShare, setScreenShare] = useState(false);
@@ -254,6 +256,11 @@ const Room = (props) => {
     setDisplayAdd(!displayAdd);
   };
 
+  const clickVolume = (e) => {
+    e.stopPropagation();
+    setDisplayVolume(!displayVolume);
+  };
+
   // BackButton
   const goToOtherTable = (e) => {
     e.stopPropagation();
@@ -372,7 +379,10 @@ const Room = (props) => {
         <AddWish display ={displayAdd} setWishList={setWishList} wishlist={wishlist} userName={currentUser} userFood={'https://images.pexels.com/photos/708587/pexels-photo-708587.jpeg?auto=compress&cs=tinysrgb&h=750&w=1260'} goToScreen={clickAdd} />:
         displayOtherTable ?
         <RoomList display={displayOtherTable} roomId={roomId} goToScreen={goToOtherTable}/> :
-        <VideoContainer>
+          displayVolume?
+          <Volume display={displayVolume}/> 
+          :
+       <VideoContainer>
           {/* Current User Video */}
           <VideoBox
             className={`width-peer${peers.length > 8 ? '' : peers.length}`}
@@ -411,6 +421,7 @@ const Room = (props) => {
           goToBack={goToBack}
           goToOtherTable={goToOtherTable}
           toggleCameraAudio={toggleCameraAudio}
+          clickVolume={clickVolume}
           userVideoAudio={userVideoAudio['localUser']}
           screenShare={screenShare}
         />
