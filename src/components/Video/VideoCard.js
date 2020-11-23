@@ -19,8 +19,6 @@ const VideoCard = (props) => {
         autoPlay
         ref={ref}
       />
-
-      <p>test</p>
     </div>
   );
 };
