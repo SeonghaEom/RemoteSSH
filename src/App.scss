@@ -148,3 +148,89 @@ div h2 {
     color: #5A38FD;
     text-align: center;
 }
+
+.room-list{
+  background-color: rgba(90, 56, 253, 0.2);
+  color: #5A38FD;
+  text-align: center;
+  width: 67px;
+  height: 67px;
+  border-radius: 30px;
+  line-height: 67px;
+}
+
+.join-table{
+  background-color: #5452F6;
+  color: white;
+  text-align: center;
+  width: 294px;
+  height: 47px;
+  border-radius: 15px;
+  line-height: 47px;
+}
+
+.roomlist-container-user{
+  display:flex;
+  justify-content: space-around;
+  padding: 20px;
+}
+
+.roomlist-roomId{
+  background-color: #5A38FD;
+  color: white;
+  text-align: center;
+  width: 98px;
+  height: 19px;
+  border-radius: 10px;
+  line-height: 19px;
+}
+
+.roomlist-container{
+  display:flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: white;
+  border-radius: 10px;
+  padding-left: 50px;
+  padding-right: 50px;
+  padding-top: 30px;
+  padding-bottom: 30px;
+  margin: 50px;
+}
+
+.roomlist-background{
+  background-color: #121A2D;
+  height: 100vh;
+  width: 100vh;
+  display: flex;
+  align-items: start;
+  flex-direction: column;
+}
+
+.close {
+  // position: absolute;
+  // left: 49px;
+  // top: 32px;
+  // width: 32px;
+  // height: 32px;
+  opacity: 0.3;
+  margin: 32px;
+}
+.close:hover {
+  opacity: 1;
+}
+.close:before, .close:after {
+  position: absolute;
+  // left: 15px;
+  content: '';
+  height: 33px;
+  width: 2px;
+  background-color: white;
+}
+.close:before {
+  transform: rotate(45deg);
+}
+.close:after {
+  transform: rotate(-45deg);
+}

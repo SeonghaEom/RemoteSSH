@@ -7,6 +7,7 @@ import BottomBar from '../BottomBar/BottomBar';
 import Chat from '../Chat/Chat';
 import AddWish from '../WishList/AddWish';
 import Wish from '../WishList/Wish';
+import RoomList from '../RoomList';
 
 const Room = (props) => {
   var currentUser = sessionStorage.getItem('user');
@@ -16,9 +17,11 @@ const Room = (props) => {
   });
   const [wishlist, setWishList] = useState([]);
   const [displayChat, setDisplayChat] = useState(false);
-  const [displayWish, setDisplayWish] = useState(false)
-  const [displayAdd, setDisplayAdd] = useState(false)
+  const [displayWish, setDisplayWish] = useState(false);
+  const [displayOtherTable, setDisplayOtherTable] = useState(false);
+  const [displayAdd, setDisplayAdd] = useState(false);
   const [screenShare, setScreenShare] = useState(false);
+  
   const peersRef = useRef([]);
   const userVideoRef = useRef();
   const screenTrackRef = useRef();
@@ -242,12 +245,23 @@ const Room = (props) => {
     setDisplayWish(!displayWish);
   };
 
+  
   const clickAdd = (e) => {
     e.stopPropagation();
     setDisplayAdd(!displayAdd);
   };
 
   // BackButton
+  const goToOtherTable = (e) => {
+    e.stopPropagation();
+    setDisplayOtherTable(!displayOtherTable);
+    console.log(displayOtherTable);
+    // e.preventDefault();
+    // socket.emit('BE-leave-room', { roomId, leaver: currentUser });
+    // sessionStorage.removeItem('user');
+    // window.location.href = '/room-list';
+  };
+
   const goToBack = (e) => {
     e.preventDefault();
     socket.emit('BE-leave-room', { roomId, leaver: currentUser });
@@ -348,6 +362,8 @@ const Room = (props) => {
   return (
     <RoomContainer>
       <VideoAndBarContainer>
+        {displayOtherTable ?
+        <RoomList display={displayOtherTable} roomId={roomId} goToScreen={goToOtherTable}/> :
         <VideoContainer>
           {/* Current User Video */}
           <VideoBox
@@ -379,11 +395,13 @@ const Room = (props) => {
           {peers &&
             peers.map((peer, index, arr) => createUserVideo(peer, index, arr))}
         </VideoContainer>
+        }
         <BottomBar
           clickScreenSharing={clickScreenSharing}
           clickChat={clickChat}
           clickWish={clickWish}
           goToBack={goToBack}
+          goToOtherTable={goToOtherTable}
           toggleCameraAudio={toggleCameraAudio}
           userVideoAudio={userVideoAudio['localUser']}
           screenShare={screenShare}
@@ -391,7 +409,8 @@ const Room = (props) => {
       </VideoAndBarContainer>
       {/* <AddWish displayAdd={displayAdd} wishlist={wishlist} setWishList={setWishList} /> */}
       <Wish displayWishlist={displayWish} wishlist={wishlist} setWishList={setWishList} />
-      <Chat display={displayChat} roomId={roomId} />
+      <Chat display={displayChat} roomId={roomId}/>
+      
     </RoomContainer>
   );
 };
@@ -401,6 +420,7 @@ const RoomContainer = styled.div`
   width: 100%;
   max-height: 100vh;
   flex-direction: row;
+  overflow: invisible;
 `;
 
 const VideoContainer = styled.div`

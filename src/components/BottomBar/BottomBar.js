@@ -5,6 +5,7 @@ const BottomBar = ({
   clickChat,
   clickWish,
   goToBack,
+  goToOtherTable,
   toggleCameraAudio,
   userVideoAudio,
   clickScreenSharing,
@@ -55,6 +56,7 @@ const BottomBar = ({
           </div>
           WishList
         </WishList>
+        <OtherTable onClick={goToOtherTable}>OtherTable</OtherTable>
       </Center>
       <Right>
         <StopButton onClick={goToBack}>Stop</StopButton>
@@ -138,6 +140,22 @@ const WishList = styled.div`
 
   .sharing {
     color: #ee2560;
+  }
+`;
+
+const OtherTable = styled.div`
+  width: 75px;
+  height: 30px;
+  border: none;
+  font-size: 0.9375rem;
+  line-height: 30px;
+  margin-right: 15px;
+  background-color: #ee2560;
+  border-radius: 15px;
+
+  :hover {
+    background-color: #f25483;
+    cursor: pointer;
   }
 `;
 
