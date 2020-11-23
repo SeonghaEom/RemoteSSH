@@ -9,7 +9,6 @@ import NavbarEmpty from '../Navbar/NavbarEmpty'
 import firebase from '../../config/fbconfig'
 import storage from '../../config/fbconfig'
 import firestore from '../../config/fbconfig'
-// import 'firebase/firestore';
 
 class LoginPage extends React.Component {
     constructor() { 
@@ -77,8 +76,8 @@ class LoginPage extends React.Component {
     handleUploadPhoto = e => {
         //for image upload
         const {image} = this.state;
-        // const uploadPhoto = storage.ref(`foodImages/${this.state.username}`).put(image);
-        const uploadPhoto = storage.ref().child(`foodImages/${this.state.username}`).put(image);
+        const uploadPhoto = storage.ref(`foodImages/${this.state.username}`).put(image);
+        // const uploadPhoto = firebase.storage().ref().child(`foodImages/${this.state.username}`).put(image);
         uploadPhoto.on('state_changed', 
         (snapshot) => {
             //show progress of upload
@@ -148,3 +147,5 @@ class LoginPage extends React.Component {
         )
     }
 }
+
+export default LoginPage;
