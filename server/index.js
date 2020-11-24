@@ -16,7 +16,7 @@ const io = require('socket.io')(http);
 const PORT = process.env.PORT || 9000; // use 9000 port
 
 var corsOptions = {
-  origin: 'http://localhost:3000',
+  origin: 'https://remote-ssh.herokuapp.com',
   credentials: true
 }
 app.use(cors(corsOptions))
