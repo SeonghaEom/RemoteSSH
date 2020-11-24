@@ -1,5 +1,6 @@
 import React, { Component } from 'react'
 import * as firebase from 'firebase'
+require('firebase/app');
 
 export default class TopicCard extends Component {
     constructor(props) {

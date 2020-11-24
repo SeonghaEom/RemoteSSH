@@ -10,7 +10,9 @@ export default class Navigation extends Component {
             <div>
                 <Navbar>
                     <Navbar.Brand href="#home">
-                    <img alt="remoteSSHLogo" height="28" src={require('../../pictures/logo.svg')}/>
+                        <Link to="/">
+                                <img alt="remoteSSHLogo" height="28" src={require('../../pictures/logo.svg')}/>
+                        </Link>
                     </Navbar.Brand>
                     <Navbar.Toggle aria-controls="basic-navbar-nav" />
                     <Navbar.Toggle />
@@ -21,9 +23,9 @@ export default class Navigation extends Component {
                         <Nav.Link>
                             <Scrollchor className="nav-link" to="#about-us">About Us</Scrollchor>
                         </Nav.Link>
-                        <Link to="/login">
+                        {/* <Link to="/login">
                             <button type="button" className="secondary-button">Join Room</button>
-                        </Link>
+                        </Link> */}
                     </Navbar.Collapse>
                 </Navbar>
             </div>
