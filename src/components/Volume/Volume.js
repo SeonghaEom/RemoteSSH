@@ -156,7 +156,11 @@ const Volume = ({ display, roomId, goToVolume }) => {
 
 
                                 </Slider>
-                                <center><Button onClick={playtalk1}><i class="fa fa-volume-up"/></Button></center>
+                                <center>
+                                  <Button onClick={playtalk1}>
+                                    <img alt="remoteSSHLogo" height="28" src={require('../../pictures/play-button.svg')}/>
+                                  </Button>
+                                </center>
                             </div>
                            
                         </div>
