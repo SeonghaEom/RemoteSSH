@@ -2,6 +2,7 @@ import React, {useRef, useState, useEffect} from 'react';
 import {useLocation} from 'react-router-dom';
 import styled from 'styled-components';
 import socket from '../../socket';
+import NavbarEmpty from '../Navbar/NavbarEmpty';
 
 function useQuery() {
     return new URLSearchParams(useLocation().search);
@@ -48,13 +49,15 @@ const Join = (props) => {
 
     return (
         <MainContainer>
-            <Row>
+            <NavbarEmpty/>
+            <h3 className="join-command">Type in the roomname and username you used to login</h3>
+            <Row id="room-input">
                 <Label htmlFor="roomName">Room Name</Label>
                 <Input value={roomId} type="text" id="roomName" onChange={(e) => {
                     setRoomId(e.currentTarget.value);
                 }}/>
             </Row>
-            <Row>
+            <Row id="user-input">
                 <Label htmlFor="userName">User Name</Label>
                 <Input value={userName} type="text" id="userName" onChange={(e) => {
                     setUserName(e.currentTarget.value);

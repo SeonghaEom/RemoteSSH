@@ -8,21 +8,22 @@ import {Link} from 'react-router-dom'
 import storage from '../../config/fbconfig'
 import firestore from '../../config/fbconfig'
 import * as firebase from 'firebase'
+// require('firebase/database');
 
 export default function TopicSuggestion() {
     const [topicList, setTopicList] = useState();
 
     //load topics from database
     useEffect(() => {
-        const topicRef = firebase.database().ref("Topics");
+        const topicRef = firebase.database().ref('Topics');
         topicRef.on("value", (snapshot) => {
-            // console.log(snapshot.val());
+            console.log(snapshot.val());
             const topics = snapshot.val();
             const topicList = [];
             for (let id in topics) {
                 topicList.push({id, ... topics[id]});
             }
-            // console.log(topicList);
+            console.log(topicList);
             setTopicList(topicList);
         });
     }, []);
@@ -36,7 +37,7 @@ export default function TopicSuggestion() {
                 ) : ' '}
             </div>
             <Link to="/join">
-                <button className="primary-button">Proceed to Room</button>
+                <button className="primary-button proceed-room">Proceed to Room</button>
             </Link>
         </div>
     )

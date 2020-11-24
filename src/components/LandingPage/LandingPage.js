@@ -16,8 +16,8 @@ export default function LandingPage() {
             <div className="intro">
                 <h1>Lets Sig Sa Hae Together!</h1>
                 <p>Eat Together with your Friends Online from anywhere.</p>
-                <Link to="/join">
-                    <button className="primary-button">Get Started</button>
+                <Link to="/login">
+                    <button className="primary-button">Join Room</button>
                 </Link>
                 <img className="min-vh-80" 
                 src={require('../../pictures/intro.svg')}/>

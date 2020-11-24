@@ -20,7 +20,7 @@ const Wish = ({display, setWishList, wishlist, goToScreen}) => {
               <div style={{display: 'flex', flexWrap: 'wrap', justifyContent: 'start'}}>
                 <div className="close" onClick={(e) => {goToScreen(e); }}></div>
                 <div style={{color: 'white', fontSize: '26px', marginTop: '40px'}}>
-                  Add To Wish List
+                  My Wish List
                 </div>
               </div>
               <div style={{display: 'flex', flexWrap: 'wrap', justifyContent: 'start'}} >

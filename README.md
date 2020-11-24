@@ -1,17 +1,12 @@
-# React-Redux Boilerplate
+# RemoteSSH
 
-This repository provides a react-redux boilerplate for those who are too lazy to setup redux for every new project. It also includes react-persist and react-thunk, which will allow you to keep your redux states even after refreshing your browser.
+This is a video-chat based service that helps users to overcome having one synchronous conversation or visual constraints. 
 
-Firebase config file required
-
-## Installation
-npm install
-npm start
-
-go to ./server
-npm install
-npm start
-
-
+## Major Files
+Folder src/components includes each folder inside includes js file for component\
+    -LandingPage, LoginPage : Accpeting the user register information and linking it with firebase\
+    -Room : Main video chat room\
+    -BottomBar : The menu bar with icons for additional feature\
+    -Volume, Wishlist, Chat and Roomlist.js : For pop-ups corresponding to each button in bottombar
 
 ```
