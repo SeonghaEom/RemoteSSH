@@ -156,7 +156,7 @@ const Volume = ({ display, roomId, goToScreen }) => {
 
 
                                 </Slider>
-                                <center><Button onClick={playtalk1}><i class="fa fa-volume-up"/></Button></center>
+                                <center><Button onClick={playtalk1}><i class="fas fa-play-circle"></i></Button></center>
                             </div>
                            
                         </div>
