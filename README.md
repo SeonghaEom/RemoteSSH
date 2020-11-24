@@ -9,4 +9,16 @@ Folder src/components includes each folder inside includes js file for component
     -BottomBar : The menu bar with icons for additional feature\
     -Volume, Wishlist, Chat and Roomlist.js : For pop-ups corresponding to each button in bottombar
 
+## To Test on Local (Single User)
+- git clone https://github.com/SeonghaEom/RemoteSSH.git
+
+- cd RemoteSSH
+- npm install
+- npm start
+
+open a new terminal
+- cd server
+- npm install
+- npm start
+
 ```
