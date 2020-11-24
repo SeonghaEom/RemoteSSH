@@ -12,7 +12,7 @@ const RoomList = ({ display, roomId, goToScreen }) => {
 
     useEffect(() => {
       async function fetchData(){
-        await fetch('http://localhost:9000/room-list')
+        await fetch('http://localhost:29529/room-list')
           .then(function(response) {
             return response.json();
         }).then((json) => {
