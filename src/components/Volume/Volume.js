@@ -12,7 +12,7 @@ import firestore from "../../config/fbconfig";
 import { useHistory } from 'react-router-dom';
 import socket from '../../socket';
 
-const Volume = ({ display, roomId, goToVolume }) => {
+const Volume = ({ display, roomId, goToScreen }) => {
 
     const [roomList, setRoomList] = useState([]);
     const [userList, setUserList] = useState([]);
@@ -115,7 +115,7 @@ const Volume = ({ display, roomId, goToVolume }) => {
 
         return <div className='roomlist-background'>
               <div style={{display: 'flex', flexWrap: 'wrap', justifyContent: 'start'}}>
-                {/* <div className="close" onClick={goToVolume}></div> */}
+              <div className="close" onClick={(e) => {goToScreen(e); }}></div>
                 {/* <div className="close" onClick={(e) => {
                   goToVolume(e);
                   history.go(0);
