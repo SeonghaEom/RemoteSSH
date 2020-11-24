@@ -21,7 +21,8 @@ var corsOptions = {
 }
 app.use(cors(corsOptions));
 app.use(express.static(path.join(__dirname, '../build')));
-app.get('/', (req, res, next) => res.sendFile(__dirname + '../public/index.html'));
+// app.get('/', (req, res, next) => res.sendFile(__dirname + '../public/index.html'));
+// app.use('/static', express.static(__dirname + '/public'));
 
 Set.prototype.intersection = function(setB) {
   var intersection = new Set();
@@ -52,9 +53,9 @@ let socketList = {};
 //   모든 request에 대해서 build폴더 아래 index.html을 보내도록 되어 있는데,
 //       이부분을 수정하여 server side 프로그래밍을 한다.
 
-// app.get('*', (req, res) => {
-//   res.sendFile(path.resolve(__dirname, '..', 'build', 'index.html'));
-// });
+app.get('*', (req, res) => {
+  res.send(express.static(path.join(__dirname, '../build/index.html')));
+});
 
 
 // Socket
