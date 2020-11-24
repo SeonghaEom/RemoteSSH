@@ -19,7 +19,9 @@ var corsOptions = {
   origin: 'https://remote-ssh.herokuapp.com',
   credentials: true
 }
-app.use(cors(corsOptions))
+app.use(cors(corsOptions));
+app.use(express.static(path.join(__dirname, '../build')));
+app.get('/', (req, res, next) => res.sendFile(__dirname + '../public/index.html'));
 
 Set.prototype.intersection = function(setB) {
   var intersection = new Set();
