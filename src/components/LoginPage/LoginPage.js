@@ -19,6 +19,8 @@ class LoginPage extends React.Component {
             topic: "",
             image: null,
             url: "",
+            roomCode: "",
+            roomPass:""
         };
         this.handleChange = this.handleChange.bind(this);
     }
@@ -26,7 +28,9 @@ class LoginPage extends React.Component {
     handleChange = e => {
         if (e.target.files[0]) {
             const image = e.target.files[0];
-            this.setState(() => ({image}));
+            this.setState({
+                image: image
+            });
         }
     }
 
@@ -52,16 +56,16 @@ class LoginPage extends React.Component {
         }
         topicRef.push(topic);
 
-        //clear the component state
-        this.setState({
-            username: "",
-            topic: ""
-        });
+        // //clear the component state
+        // this.setState({
+        //     username: "",
+        //     topic: ""
+        // });
     }
 
     handleUploadPhoto = e => {
         //for image upload
-        const {image} = this.state;
+        const image = this.state.image;
         // const uploadPhoto = storage.ref(`foodImages/${this.state.username}`).put(image);
         const uploadPhoto = firebase.storage().ref().child(`foodImages/${this.state.username}`).put(image);
         uploadPhoto.on('state_changed', 
@@ -74,12 +78,25 @@ class LoginPage extends React.Component {
         }, 
         () => {
             // complete upload
-            console.log('photouploaded');
+            // console.log('photouploaded');
             uploadPhoto.snapshot.ref.getDownloadURL().then((url) => {
-                console.log('file vailable at', url);
-                this.setState({url});
+                // console.log('file vailable at', url);
+                // this.setState(() => ({url}));
+                this.setState({
+                    url: url
+                });
             });
         });
+    }
+
+    checkRoomInfo = e => {
+        e.preventDefault();
+        if (this.state.roomCode == "PizzaMeeting" && this.state.roomPass == "1234") {
+            window.location.href = window.location.host + "/join";
+        }
+        else {
+            console.log("wrong info");
+        }
     }
  
     render() { 
@@ -88,7 +105,7 @@ class LoginPage extends React.Component {
                 <NavbarEmpty/>
     
                 <Alert className="demo-alert">
-                    We are currently in the Demo Phase. Try our features with our trial meeting room code: 
+                    We are currently in the Demo Phase. Try our features with our trial Meeting room code 
                     <b> PizzaMeeting</b> and Code <b>1234.</b>
                 </Alert>    
     
@@ -96,15 +113,15 @@ class LoginPage extends React.Component {
                     <Form.Group controlId="formBasicInfo" className="form-basic">
                         <div>
                         <Form.Label>Username</Form.Label>
-                        <Form.Control type="text" name="username" 
+                        <Form.Control required type="text" name="username" 
                         onChange={this.updateInput} value={this.state.username}
                         placeholder="Username" />
     
                         <Form.Label>Meeting Room Code</Form.Label>
-                        <Form.Control type="text" placeholder="Example: 1234" />
+                        <Form.Control onChange={this.updateInput}  name="roomCode" value={this.state.roomCode} required type="text" placeholder="Example: PizzaMeeting" />
     
                         <Form.Label>Meeting Room Password</Form.Label>
-                        <Form.Control type="text" placeholder="Example: 1234" />
+                        <Form.Control onChange={this.updateInput} name="roomPass" value={this.state.roomPass} required type="text" placeholder="Example: 1234" />
                         </div>
     
                         <div className="separator"></div>
@@ -112,7 +129,7 @@ class LoginPage extends React.Component {
                         {/* upload photo */}
                         <div className="photo-upload">
                             <Form.File type="file" onChange={this.handleChange}
-                            label="Example file input" />
+                            label="Upload Food Picture" />
                             <img height="100" width="100%" src={this.state.url}/>
                             <button onClick={this.handleUploadPhoto}>Upload Picture</button>
                         </div>
@@ -120,12 +137,20 @@ class LoginPage extends React.Component {
     
                     <Form.Group controlId="formBasicInfo" className="topic-form">
                         <Form.Label>Any topic suggestions to chat about?</Form.Label>
-                        <Form.Control name="topic" as="textarea" rows={3} onChange={this.updateInput}
+                        <Form.Control required name="topic" as="textarea" rows={3} onChange={this.updateInput}
                         value={this.state.topic}/>
                     </Form.Group>
                     
                     <div className="form-nav">
-                        <button className="primary-button">Join Room</button>
+                        {(this.state.roomCode == "PizzaMeeting" && this.state.roomPass == "1234") ? 
+                            <Link to="/join">
+                                <button className="primary-button">Join Room</button>
+                            </Link> :
+                            <button className="primary-button">Join Room</button>
+                        }
+                        {/* <Link to="/join">
+                            <button onClick={this.checkRoomInfo} className="primary-button">Join Room</button>
+                        </Link> */}
                         <Link className="back-mainpage" to="/">Back To Mainpage</Link>
                     </div>
                 </Form>

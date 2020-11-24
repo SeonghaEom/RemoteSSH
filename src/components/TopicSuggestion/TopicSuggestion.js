@@ -32,8 +32,6 @@ export default function TopicSuggestion() {
         <div className="topic-suggestion">
             <NavbarEmpty/>
             <div id="topic-container">
-                {/* <TopicCard topic={"I would like to talk about life"} dislikes={0} likes={0} id={0}/>
-                <TopicCard topic={"Have you seen the new kermit the frog movie?"} dislikes={0} likes={0} id={0}/> */}
                 {topicList ? topicList.map((item, index) =>
                 <TopicCard topic={item.topic} dislikes={item.dislikes} likes={item.likes} id={item.id}/>
                 ) : ' '}
