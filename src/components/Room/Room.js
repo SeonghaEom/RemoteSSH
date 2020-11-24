@@ -278,6 +278,16 @@ const Room = (props) => {
     // window.location.href = '/room-list';
   };
 
+  const goToVolume = (e) => {
+    e.stopPropagation();
+    setDisplayVolume(!displayVolume);
+    console.log(displayVolume);
+    // e.preventDefault();
+    // socket.emit('BE-leave-room', { roomId, leaver: currentUser });
+    // sessionStorage.removeItem('user');
+    // window.location.href = '/room-list';
+  };
+
   const goToBack = (e) => {
     e.preventDefault();
     socket.emit('BE-leave-room', { roomId, leaver: currentUser });
@@ -386,7 +396,7 @@ const Room = (props) => {
         displayOtherTable ?
         <RoomList display={displayOtherTable} roomId={roomId} goToScreen={goToOtherTable}/> :
         displayVolume?
-        <Volume display={displayVolume} goToScreen={goToOtherTable}/> :
+        <Volume display={displayVolume} goToScreen={goToVolume}/> :
         <div className="room-display-every">
           <VideoContainer className='room-video-container'>
             {/* Current User Video */}
@@ -420,6 +430,7 @@ const Room = (props) => {
           clickWish={clickWish}
           goToBack={goToBack}
           goToOtherTable={goToOtherTable}
+          goToVolume={goToVolume}
           toggleCameraAudio={toggleCameraAudio}
           clickVolume={clickVolume}
           userVideoAudio={userVideoAudio['localUser']}

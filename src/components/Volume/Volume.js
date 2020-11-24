@@ -12,7 +12,7 @@ import firestore from "../../config/fbconfig";
 import { useHistory } from 'react-router-dom';
 import socket from '../../socket';
 
-const Volume = ({ display, roomId, goToScreen }) => {
+const Volume = ({ display, roomId, goToVolume }) => {
 
     const [roomList, setRoomList] = useState([]);
     const [userList, setUserList] = useState([]);
@@ -115,10 +115,11 @@ const Volume = ({ display, roomId, goToScreen }) => {
 
         return <div className='roomlist-background'>
               <div style={{display: 'flex', flexWrap: 'wrap', justifyContent: 'start'}}>
-                <div className="close" onClick={(e) => {
-                  goToScreen(e);
+                {/* <div className="close" onClick={goToVolume}></div> */}
+                {/* <div className="close" onClick={(e) => {
+                  goToVolume(e);
                   history.go(0);
-                  }}></div>
+                }}></div> */}
                 <div style={{color: 'white', fontSize: '26px', marginTop: '40px'}}>
                   Listen to what others are talking about
                 </div>
@@ -129,7 +130,7 @@ const Volume = ({ display, roomId, goToScreen }) => {
                         ? //userList.map((roomuser) =>
                         <div className="roomlist-container">
                             <div className="roomlist-roomId">
-                              Room next to you
+                              Other Room
                             </div>
                             <div style={{width:'100%'}}>
                                    <Slider
@@ -159,7 +160,7 @@ const Volume = ({ display, roomId, goToScreen }) => {
                             </div>
                            
                         </div>
-                        : <div className="roomlist-container">There are no other rooms</div>)
+                        : <div className="roomlist-container">There is no other room</div>)
                 }
             </div>
         </div>
@@ -397,7 +398,7 @@ export default Volume;
 
 const AddWishContainer = styled.div`
   display: block;
-  width: 50%;
+  width: 70%;
   hieght: 100%;
   background-color: white;
   transition: all 0.5s ease;
@@ -406,7 +407,7 @@ const AddWishContainer = styled.div`
 
 const WishContainer = styled.div`
   display: block;
-  width: 50%;
+  width: 70%;
   hieght: 100%;
   background-color: white;
   transition: all 0.5s ease;
