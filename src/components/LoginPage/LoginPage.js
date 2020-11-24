@@ -89,7 +89,7 @@ class LoginPage extends React.Component {
     
                 <Alert className="demo-alert">
                     We are currently in the Demo Phase. Try our features with our trial meeting room code: 
-                    <b> PizzaMeeting</b>.
+                    <b> PizzaMeeting</b> and Code <b>1234.</b>
                 </Alert>    
     
                 <Form className="login-forms" onSubmit={this.addInfo}>
@@ -113,8 +113,8 @@ class LoginPage extends React.Component {
                         <div className="photo-upload">
                             <Form.File type="file" onChange={this.handleChange}
                             label="Example file input" />
-                            <img height="100" width="100%" src={this.state.url} alt="uploadedPicture"/>
-                            <button onClick={this.handleUploadPhoto}>Choose Picture</button>
+                            <img height="100" width="100%" src={this.state.url}/>
+                            <button onClick={this.handleUploadPhoto}>Upload Picture</button>
                         </div>
                     </Form.Group>
     
@@ -126,7 +126,7 @@ class LoginPage extends React.Component {
                     
                     <div className="form-nav">
                         <button className="primary-button">Join Room</button>
-                        <Link href="">Back To Mainpage</Link>
+                        <Link className="back-mainpage" to="/">Back To Mainpage</Link>
                     </div>
                 </Form>
             </div>
