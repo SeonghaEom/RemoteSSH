@@ -11,7 +11,7 @@
     "start": "node index.js",
     "dev": "nodemon index.js",
     "test": "echo \"Error: no test specified\" && exit 1",
-    "heroku-prebuild" : "cd .. && npm install && npm run build"
+    "heroku-prebuild": "cd client && npm install && npm run build && cd .."
   },
   "author": "",
   "license": "ISC",

@@ -20,7 +20,7 @@ var corsOptions = {
   credentials: true
 }
 app.use(cors(corsOptions));
-app.use(express.static(path.join(__dirname, '../build')));
+app.use(express.static(path.join(__dirname, './client/build')));
 // app.get('/', (req, res, next) => res.sendFile(__dirname + '../public/index.html'));
 // app.use('/static', express.static(__dirname + '/public'));
 
