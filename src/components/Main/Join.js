@@ -50,7 +50,7 @@ const Join = (props) => {
     return (
         <MainContainer>
             <NavbarEmpty/>
-            <h3 className="join-command">Type in the roomname and username you used to login</h3>
+            <h3 className="join-command">Type in either 'cheese' or 'peperoni', or anything and freely switch rooms! </h3>
             <Row id="room-input">
                 <Label htmlFor="roomName">Room Name</Label>
                 <Input value={roomId} type="text" id="roomName" onChange={(e) => {
