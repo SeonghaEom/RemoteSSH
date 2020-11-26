@@ -3,14 +3,21 @@
 'use strict';
 
 const express = require('express');
+const fs = require('fs');
 // const morgan = require('morgan');
 const path = require('path');
 
 const app = express();
 const cors = require('cors');
 
-const http = require('http').createServer(app);
-const io = require('socket.io')(http);
+var options = { 
+    key:  fs.readFileSync('../ryans-key.pem'), 
+    cert: fs.readFileSync('../ryans-cert.pem')
+}; 
+
+
+const https = require('https').createServer(options, app);
+const io = require('socket.io')(https);
 
 
 const PORT = process.env.PORT || 9000; // use 9000 port
@@ -173,7 +180,7 @@ io.on('connection', (socket) => {
   // });
 });
 
-http.listen(PORT, () => {
+https.listen(PORT, () => {
 
   console.log(`App listening on port ${PORT}!`);
 
