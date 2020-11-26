@@ -9,10 +9,10 @@ Folder src/components includes each folder inside includes js file for component
     -BottomBar : The menu bar with icons for additional feature\
     -Volume, Wishlist, Chat and Roomlist.js : For pop-ups corresponding to each button in bottombar
 
-## To Test on Currently deployed version, (multiple synchronous)
+## To Test on Currently deployed version, (Multiple Synchronous)
 - "https://remote-ssh.herokuapp.com"
-- It should be <'https'> by following WebRTC.
-- still in debugging mode, so always reload whenever sth broke :)
+- NOTE: It should be <'https'> to safely enable camera and mic.
+- We're keep debugging, so always reload whenever sth broke :)
 
 ## To Test on Local (Single User)
 - git clone https://github.com/SeonghaEom/RemoteSSH.git
