@@ -10,17 +10,14 @@ const path = require('path');
 const app = express();
 const cors = require('cors');
 
-var options = { 
-    key:  fs.readFileSync('../ryans-key.pem'), 
-    cert: fs.readFileSync('../ryans-cert.pem')
-}; 
 
-
-const https = require('https').createServer(options, app);
+const https = require('http').createServer(app);
 const io = require('socket.io')(https);
 
 
 const PORT = process.env.PORT || 9000; // use 9000 port
+// const PORT = 443;
+// const PORT2 = 443;
 
 var corsOptions = {
   origin: 'https://remote-ssh.herokuapp.com',
@@ -29,6 +26,9 @@ var corsOptions = {
 }
 app.use(cors(corsOptions));
 app.use(express.static(path.join(__dirname, '../build')));
+app.get('/health', function(req, res) {
+  res.send('Hello Sir')
+})
 // app.get('/', (req, res, next) => res.sendFile(__dirname + '../public/index.html'));
 // app.use('/static', express.static(__dirname + '/public'));
 
@@ -73,7 +73,7 @@ io.on('connection', (socket) => {
     socket.disconnect();
 
     console.log('User disconnected!', createdRooms);
-    
+
   });
 
   socket.on('BE-check-user', ({ roomId, userName }) => {
@@ -94,13 +94,13 @@ io.on('connection', (socket) => {
    */
   socket.on('BE-join-room', ({ roomId, userName }) => {
     // Socket Join RoomName
-    
+
     socket.join(roomId);
     // socketList[socket.id] = { userName, video: true, audio: true };
     if (typeof createdRooms[roomId] == "undefined"){
       createdRooms[roomId] = { } // create new room
     }
-    
+
     createdRooms[roomId][socket.id] = { userName, video: true, audio: true };
     console.log("be-join-room createdRooms ", createdRooms);
     // console.log("io sockets", io.sockets);
@@ -135,7 +135,7 @@ io.on('connection', (socket) => {
         socket.emit('FE-show-all-users', {roomId: roomId, users: users});
         // io.sockets.in(roomId).emit('FE-user-join', users);
       } catch (e) {
-        
+
       }
     });
   })
