@@ -55,7 +55,7 @@ const Room = (props) => {
             let { userName, video, audio } = info;
 
             if (userName !== currentUser) {
-              const peer = createPeer(userId, socket.id, stream);
+              const peer = createPeer(userId, socket.id, stream, roomId);
 
               peer.userName = userName;
               peer.peerID = userId;
@@ -159,7 +159,7 @@ const Room = (props) => {
     }
   }, []);
 
-  function createPeer(userId, caller, stream) {
+  function createPeer(userId, caller, stream, roomId) {
     const peer = new Peer({
       initiator: true,
       trickle: false,
@@ -171,6 +171,7 @@ const Room = (props) => {
         userToCall: userId,
         from: caller,
         signal,
+        roomId: roomId,
       });
     });
     peer.on('disconnect', () => {

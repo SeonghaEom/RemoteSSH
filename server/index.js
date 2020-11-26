@@ -10,8 +10,15 @@ const path = require('path');
 const app = express();
 const cors = require('cors');
 
+// var options = {
+//     key:  fs.readFileSync('../ryans-key.pem'),
+//     cert: fs.readFileSync('../ryans-cert.pem')
+// };
 
 const https = require('http').createServer(app);
+const io = require('socket.io')(https);
+
+const https = require('https').createServer(options, app);
 const io = require('socket.io')(https);
 
 
@@ -20,8 +27,8 @@ const PORT = process.env.PORT || 9000; // use 9000 port
 // const PORT2 = 443;
 
 var corsOptions = {
-  origin: 'https://remote-ssh.herokuapp.com',
-  //  origin: 'http://localhost:3000',
+  // origin: 'https://remote-ssh.herokuapp.com',
+   origin: 'http://localhost:3000',
   credentials: true
 }
 app.use(cors(corsOptions));
@@ -180,7 +187,7 @@ io.on('connection', (socket) => {
   // });
 });
 
-https.listen(PORT, () => {
+http.listen(PORT, () => {
 
   console.log(`App listening on port ${PORT}!`);
 
