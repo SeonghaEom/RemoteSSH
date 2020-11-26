@@ -7,7 +7,7 @@ const OtherRoom = (props) => {
 
   useEffect(() => {
     async function fetchData(){
-      await fetch('http://3.35.238.94:9000/otherrooms')
+      await fetch('https://3.35.238.94:9000/otherrooms')
         .then(function(response) {
           return response.json();
       }).then((json) => {

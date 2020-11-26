@@ -77,7 +77,7 @@ const Volume = ({ display, roomId, goToScreen }) => {
 
     useEffect(() => {
       async function fetchData(){
-        await fetch('http://3.35.238.949000/room-list')
+        await fetch('https://3.35.238.949000/room-list')
           .then(function(response) {
             return response.json();
         }).then((json) => {
