@@ -49,7 +49,7 @@ const Room = (props) => {
         socket.emit('BE-join-room', { roomId, userName: currentUser});
         socket.on('FE-user-join', (users) => {
           // all users
-          console.log(users);
+          console.log("fe-user-join all users ", users);
           const peers = [];
           users.forEach(({ userId, info }) => {
             let { userName, video, audio } = info;
@@ -75,11 +75,11 @@ const Room = (props) => {
               });
             }
           });
-
+          console.log("peers! ", peers);
           setPeers(peers);
         });
 
-        socket.on('FE-receive-call', ({ signal, from, info }) => {
+        socket.on('FE-receive-call', ({ signal, from, info, roomId }) => {
           let { userName, video, audio } = info;
           const peerIdx = findPeer(from);
 
@@ -96,6 +96,8 @@ const Room = (props) => {
             setPeers((users) => {
               return [...users, peer];
             });
+
+            console.log("Room.js fe-receive-call ", peers);
             setUserVideoAudio((preList) => {
               return {
                 ...preList,
@@ -138,7 +140,8 @@ const Room = (props) => {
     });
 
     return () => {
-      socket.disconnect();
+      socket.disconnect(roomId);
+
     };
     // eslint-disable-next-line
   }, []);
@@ -170,7 +173,8 @@ const Room = (props) => {
       socket.emit('BE-call-user', {
         userToCall: userId,
         from: caller,
-        signal,
+        signal: signal,
+        roomId: roomId,
       });
     });
     peer.on('disconnect', () => {

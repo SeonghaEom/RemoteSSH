@@ -5,7 +5,7 @@ import socket from '../socket';
 
 const RoomList = ({ display, roomId, goToScreen }) => {
 
-    const [roomList, setRoomList] = useState([]);
+    const [roomList, setRoomList] = useState([]); // {roomId, users}
     const [userList, setUserList] = useState([]);
     let history = useHistory()
 
@@ -49,7 +49,7 @@ const RoomList = ({ display, roomId, goToScreen }) => {
                 >
                     {userinfo.info.userName}
                 </div>)
-            : <div>Loading</div>)}
+            : <div>The room is empty!</div>)}
         </div>
       )
     };
@@ -91,6 +91,7 @@ const RoomList = ({ display, roomId, goToScreen }) => {
                             <div className="join-table"
                                 onClick={() => {
                                     history.replace(roomuser.roomId);
+                                    socket.emit('BE-leave-room', ({ roomId, leaver: socket.id}));
                                     // window.location.href='room/' + roomuser.roomId;
                                     history.go(0);
                                     

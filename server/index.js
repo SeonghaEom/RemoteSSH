@@ -16,7 +16,8 @@ const io = require('socket.io')(http);
 const PORT = process.env.PORT || 9000; // use 9000 port
 
 var corsOptions = {
-  origin: 'https://remote-ssh.herokuapp.com',
+  // origin: 'https://remote-ssh.herokuapp.com',
+   origin: 'http://localhost:3000',
   credentials: true
 }
 app.use(cors(corsOptions));
@@ -35,9 +36,8 @@ Set.prototype.intersection = function(setB) {
 }
 
 
-const createdRooms = [];
+let createdRooms = {};
 
-let socketList = {};
 
 
 // Setup logger
@@ -53,18 +53,20 @@ let socketList = {};
 //   모든 request에 대해서 build폴더 아래 index.html을 보내도록 되어 있는데,
 //       이부분을 수정하여 server side 프로그래밍을 한다.
 
-app.get('*', (req, res) => {
-  res.send(express.static(path.join(__dirname, '../build/index.html')));
-});
 
 
 // Socket
 io.on('connection', (socket) => {
   console.log(`New User connected: ${socket.id}`);
 
-  socket.on('disconnect', () => {
+  socket.on('disconnect', (roomId) => {
+    if (createdRooms[roomId]){
+      createdRooms[roomId].splice(socket.id, 1);
+    }
     socket.disconnect();
-    console.log('User disconnected!');
+
+    console.log('User disconnected!', createdRooms);
+    
   });
 
   socket.on('BE-check-user', ({ roomId, userName }) => {
@@ -72,7 +74,7 @@ io.on('connection', (socket) => {
 
     io.sockets.in(roomId).clients((err, clients) => {
       clients.forEach((client) => {
-        if (socketList[client] == userName) {
+        if (createdRooms[roomId][client] == userName) {
           error = true;
         }
       });
@@ -85,19 +87,24 @@ io.on('connection', (socket) => {
    */
   socket.on('BE-join-room', ({ roomId, userName }) => {
     // Socket Join RoomName
-    createdRooms.push(roomId);
+    
     socket.join(roomId);
-    socketList[socket.id] = { userName, video: true, audio: true };
-    console.log("socketList ", socketList);
-    console.log("createdRooms ", createdRooms);
+    // socketList[socket.id] = { userName, video: true, audio: true };
+    if (typeof createdRooms[roomId] == "undefined"){
+      createdRooms[roomId] = { } // create new room
+    }
+    
+    createdRooms[roomId][socket.id] = { userName, video: true, audio: true };
+    console.log("be-join-room createdRooms ", createdRooms);
     // console.log("io sockets", io.sockets);
     // Set User List
     io.sockets.in(roomId).clients((err, clients) => {
       try {
+        console.log("clients ", clients, "in room ", roomId);
         const users = [];
         clients.forEach((client) => {
           // Add User List
-          users.push({ userId: client, info: socketList[client] });
+          users.push({ userId: client, info: createdRooms[roomId][client] });
         });
         // console.log("all users ", users);
         socket.broadcast.to(roomId).emit('FE-user-join', users);
@@ -115,9 +122,9 @@ io.on('connection', (socket) => {
         console.log(clients);
         clients.forEach((client) => {
           // Add User List
-          users.push({ userId: client, info: socketList[client] });
+          users.push({ userId: client, info: createdRooms[roomId][client] });
         });
-        console.log("all users ", roomId, users);
+        console.log("all users in", roomId, users);
         socket.emit('FE-show-all-users', {roomId: roomId, users: users});
         // io.sockets.in(roomId).emit('FE-user-join', users);
       } catch (e) {
@@ -126,11 +133,12 @@ io.on('connection', (socket) => {
     });
   })
 
-  socket.on('BE-call-user', ({ userToCall, from, signal }) => {
-    io.to(userToCall).emit('FE-receive-call', {
+  socket.on('BE-call-user', ({ userToCall, from, signal, roomId }) => {
+    io.to(roomId).emit('FE-receive-call', {
       signal,
       from,
-      info: socketList[socket.id],
+      info: createdRooms[roomId][socket.id],
+      roomId: roomId,
     });
   });
 
@@ -141,28 +149,28 @@ io.on('connection', (socket) => {
     });
   });
 
-  socket.on('BE-send-message', ({ roomId, msg, sender }) => {
-    io.sockets.in(roomId).emit('FE-receive-message', { msg, sender });
-  });
+  // socket.on('BE-send-message', ({ roomId, msg, sender }) => {
+  //   io.sockets.in(roomId).emit('FE-receive-message', { msg, sender });
+  // });
 
   socket.on('BE-leave-room', ({ roomId, leaver }) => {
-    delete socketList[socket.id];
+    delete createdRooms[roomId][leaver];
     socket.broadcast
         .to(roomId)
-        .emit('FE-user-leave', { userId: socket.id, userName: [socket.id] });
-    io.sockets.sockets[socket.id].leave(roomId);
+        .emit('FE-user-leave', { userId: socket.id, userName: leaver });
+    io.sockets.sockets[leaver].leave(roomId);
   });
 
-  socket.on('BE-toggle-camera-audio', ({ roomId, switchTarget }) => {
-    if (switchTarget === 'video') {
-      socketList[socket.id].video = !socketList[socket.id].video;
-    } else {
-      socketList[socket.id].audio = !socketList[socket.id].audio;
-    }
-    socket.broadcast
-        .to(roomId)
-        .emit('FE-toggle-camera', { userId: socket.id, switchTarget });
-  });
+  // socket.on('BE-toggle-camera-audio', ({ roomId, switchTarget }) => {
+  //   if (switchTarget === 'video') {
+  //     socketList[socket.id].video = !socketList[socket.id].video;
+  //   } else {
+  //     socketList[socket.id].audio = !socketList[socket.id].audio;
+  //   }
+  //   socket.broadcast
+  //       .to(roomId)
+  //       .emit('FE-toggle-camera', { userId: socket.id, switchTarget });
+  // });
 });
 
 http.listen(PORT, () => {
@@ -182,6 +190,7 @@ app.get('/otherrooms', (req, res) => {
 });
 
 app.get('/room-list', (req, res) => {
-  const rawRoomIds = Object.keys(io.sockets.adapter.rooms);
-  res.json([...new Set(rawRoomIds).intersection(new Set(createdRooms))]);
+  // const rawRoomIds = Object.keys(io.sockets.adapter.rooms);
+  // res.json([...new Set(rawRoomIds).intersection(new Set(createdRooms))]);
+  res.json(Object.keys(createdRooms));
 });
