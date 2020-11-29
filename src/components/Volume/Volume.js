@@ -3,7 +3,7 @@ import {Button} from 'semantic-ui-react';
 import styled from 'styled-components';
 import soundfile1 from './dialogue_1.mp3';
 import soundfile2 from './dialogue_2.mp3';
-
+import Volumesquare from './Volumesquare.js';
 import {Slider,Handles,Tracks} from 'react-compound-slider';
 
 // export 
@@ -16,15 +16,15 @@ const Volume = ({ display, roomId, goToScreen }) => {
 
     const [roomList, setRoomList] = useState([]);
     const [userList, setUserList] = useState([]);
-
-    var talk1= new Audio(soundfile1)
-    var talk2= new Audio(soundfile2) 
-    talk1.load()
-    talk2.load()
-    talk1.volume=1
-    talk2.volume=1
-    talk1.loop=true
-    talk2.loop=true
+   
+    // var talk1= new Audio(soundfile1)
+    // var talk2= new Audio(soundfile2) 
+    // talk1.load()
+    // talk2.load()
+    // talk1.volume=1
+    // talk2.volume=1
+    // talk1.loop=true
+    // talk2.loop=true
     const sliderStyle = {  // Give the slider some width
         position: 'relative',
         width: '100%',
@@ -40,40 +40,7 @@ const Volume = ({ display, roomId, goToScreen }) => {
         borderRadius: 5,
         backgroundColor: '#8B9CB6',
       }
-      function Handle({
-            handle: { id, value, percent },
-            getHandleProps
-          }) {
-            
-            talk1.volume=value/10
-            return (
-              <div
-                style={{
-                  left: `${percent}%`,
-                  position: 'absolute',
-                  marginLeft: -15,
-                  marginTop: 25,
-                  zIndex: 2,
-                  width: 30,
-                  height: 30,
-                  border: 0,
-                  textAlign: 'center',
-                  cursor: 'pointer',
-                  borderRadius: '50%',
-                  backgroundColor: '#2C4870',
-                  color: '#333',
-                }}
-                {...getHandleProps(id)}
-              >
-                <div style={{ fontFamily: 'Roboto', fontSize: 11, marginTop: -35 }}>
-                  {value}
-                </div>
-              </div>
-            ) }
-            function playtalk1(e){
-                e.preventDefault()
-                talk1.play()
-            }
+      
 
     useEffect(() => {
       async function fetchData(){
@@ -96,7 +63,7 @@ const Volume = ({ display, roomId, goToScreen }) => {
               roomId: roomId,
               users: users,
           })
-          console.log(preList);
+          // console.log(preList);
           return preList;
         })
       });
@@ -114,6 +81,7 @@ const Volume = ({ display, roomId, goToScreen }) => {
         // ).then(roomList => {
         //     setRoomList(roomList);
         // })
+        console.log(roomList)
 
         return <div className='roomlist-background'>
               <div style={{display: 'flex', flexWrap: 'wrap', justifyContent: 'start'}}>
@@ -129,43 +97,44 @@ const Volume = ({ display, roomId, goToScreen }) => {
               <div style={{display: 'flex', flexWrap: 'wrap', justifyContent: 'start'}} >
                 {
                     (roomList.length > 1
-                        ? //userList.map((roomuser) =>
-                        <div className="roomlist-container">
-                            <div className="roomlist-roomId">
-                              Other Room
-                            </div>
-                            <div style={{width:'100%'}}>
-                                   <Slider
-                                    rootStyle={sliderStyle /* inline styles for the outer div. Can also use className prop. */}
-                                    domain={[0, 10]}
-                                    values={[1]}
-                                >
-                                    <div style={railStyle /* Add a rail as a child.  Later we'll make it interactive. */} />
+                        ? roomList.map((x) =>
+                        <Volumesquare roomname={x} />)
+                        // <div className="roomlist-container">
+                        //     <div className="roomlist-roomId">
+                        //     {roomuser.roomId}
+                        //     </div>
+                        //     <div style={{width:'100%'}}>
+                        //            <Slider
+                        //             rootStyle={sliderStyle /* inline styles for the outer div. Can also use className prop. */}
+                        //             domain={[0, 10]}
+                        //             values={[0]}
+                        //         >
+                        //             <div style={railStyle /* Add a rail as a child.  Later we'll make it interactive. */} />
 
-                                    <Handles>
-                                    {({ handles, getHandleProps }) => (
-                                        <div className="slider-handles">
-                                        {handles.map(handle => (
-                                            <Handle
-                                            key={handle.id}
-                                            handle={handle}
-                                            getHandleProps={getHandleProps}
-                                            />
-                                        ))}
-                                        </div>
-                                    )}
-                                    </Handles>
+                        //             <Handles>
+                        //             {({ handles, getHandleProps }) => (
+                        //                 <div className="slider-handles">
+                        //                 {handles.map(handle => (
+                        //                     <Handle
+                        //                     key={handle.id}
+                        //                     handle={handle}
+                        //                     getHandleProps={getHandleProps}
+                        //                     />
+                        //                 ))}
+                        //                 </div>
+                        //             )}
+                        //             </Handles>
 
 
-                                </Slider>
-                                <center>
-                                  <Button onClick={playtalk1}>
-                                    <img alt="remoteSSHLogo" height="28" src={require('../../pictures/play-button.svg')}/>
-                                  </Button>
-                                </center>
-                            </div>
+                        //         </Slider>
+                        //         <center>
+                        //           <Button onClick={playtalk1}>
+                        //             <img alt="remoteSSHLogo" height="28" src={require('../../pictures/play-button.svg')}/>
+                        //           </Button>
+                        //         </center>
+                        //     </div>
                            
-                        </div>
+                        // </div>)
                         : <div className="roomlist-container">There is no other room</div>)
                 }
             </div>
