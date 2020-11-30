@@ -12,8 +12,12 @@ import Layout from '../TopicModal/Layout'
 import wishicon from '../../assets/wish_red.svg';
 import Volume from '../Volume/Volume'
 
+//firebase imports
+import * as firebase from 'firebase'
+
 const Room = (props) => {
   var currentUser = sessionStorage.getItem('user');
+  // console.log("current user: ", currentUser);
   const [peers, setPeers] = useState([]);
   const [userVideoAudio, setUserVideoAudio] = useState({
     localUser: { video: true, audio: true },
@@ -25,6 +29,10 @@ const Room = (props) => {
   const [displayOtherTable, setDisplayOtherTable] = useState(false);
   const [displayAdd, setDisplayAdd] = useState(false);
   const [screenShare, setScreenShare] = useState(false);
+  const [foodImage, setFoodImage] = useState("");
+  const [firebaseUrl, setFirebaseUrl] = useState([]);
+
+  console.log("displayAdd: ", displayAdd);
   
   const peersRef = useRef([]);
   const userVideoRef = useRef();
@@ -32,8 +40,20 @@ const Room = (props) => {
   const userStream = useRef();
   var roomId = props.match.params.roomId;
   console.log("Room ", sessionStorage);
-  
 
+  //replace with firebase pictures
+  //get picture from database
+  const images = firebase.storage().ref().child('foodImages');
+  images.child(currentUser).getDownloadURL().then(function(url) {
+    setFoodImage(url);
+  })
+  // console.log("image: ", foodImage);
+
+  const foodBackground = {
+    backgroundImage: `url(${foodImage})`
+  }
+
+  // console.log("firebaseUrl: ", firebaseUrl);
 
   useEffect(() => {
     // Set Back Button Event
@@ -45,7 +65,7 @@ const Room = (props) => {
       .then((stream) => {
         userVideoRef.current.srcObject = stream;
         userStream.current = stream;
-        console.log(currentUser);
+        // console.log(currentUser);
         socket.emit('BE-join-room', { roomId, userName: currentUser});
         socket.on('FE-user-join', (users) => {
           // all users
@@ -205,14 +225,30 @@ const Room = (props) => {
     return peersRef.current.find((p) => p.peerID === id);
   }
 
+  function addImageList(peer) { 
+    const images = firebase.storage().ref().child('foodImages');
+    images.child(peer.userName).getDownloadURL().then(function(url) {
+      setFirebaseUrl(firebaseUrl => ({...firebaseUrl, [peer.userName]: url}))
+    });
+  }
+
   function createUserVideo(peer, index, arr) {
-    // console.log("createUserVideo ", peer);
+    // const images = firebase.storage().ref().child('foodImages');
+    // images.child(peer.userName).getDownloadURL().then(function(url) {
+    //   setFirebaseUrl(firebaseUrl => ({...firebaseUrl, [peer.userName]: url}))
+    // });
+
+    const peerName = peer.userName;
+    // console.log("firebaseUrl: ", firebaseUrl.wulanfrom);
+    console.log("firebase peername:", firebaseUrl.peerName);
+    
     return (
       <div >
-      <VideoContainer className='room-video-container'>
+        {/* style={{backgroundImage: `url(${firebaseUrl.peerName})`}} */}
+      <VideoContainer className='room-video-container' style>
         {displayWish ?
             <AddWish display ={displayAdd} setWishList={setWishList} wishlist={wishlist} userName={peer.userName} userFood={'https://images.pexels.com/photos/708587/pexels-photo-708587.jpeg?auto=compress&cs=tinysrgb&h=750&w=1260'} goToScreen={clickAdd} />:
-          <VideoBox
+          <VideoBox 
             className="room-video-box"
             key={index}
           >
@@ -223,7 +259,7 @@ const Room = (props) => {
         }
         <UserName className='room-userName'>{peer.userName}</UserName>
         {/* <UserFood className='room-userFood'>
-              <img src={'https://img.etimg.com/thumb/msid-75176755,width-640,resizemode-4,imgsize-612672/effect-of-coronavirus-on-food.jpg'} width="300" height="300" alt={peer.userName} />
+              <img src={`url(${firebaseUrl})`'} width="300" height="300" alt={peer.userName} />
         </UserFood> */}
         <AddButton className='room-wishlist-addbutton' onClick={clickAdd}>
           <img src={wishicon} alt="add wish"/>
@@ -400,7 +436,7 @@ const Room = (props) => {
         displayVolume?
         <Volume display={displayVolume} goToScreen={goToVolume}/> :
         <div className="room-display-every">
-          <VideoContainer className='room-video-container'>
+          <VideoContainer style={foodBackground} className='room-video-container'>
             {/* Current User Video */}
               <VideoBox
               className='room-video-box'
@@ -423,7 +459,11 @@ const Room = (props) => {
           </VideoContainer>
             {/* Joined User Vidoe */}
             {peers &&
-              peers.map((peer, index, arr) => createUserVideo(peer, index, arr))}
+              peers.map((peer, index, arr) => {
+                addImageList(peer)
+                createUserVideo(peer, index, arr)
+              })
+            }
         </div>
         }
         <BottomBar

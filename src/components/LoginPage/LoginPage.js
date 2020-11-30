@@ -61,6 +61,7 @@ class LoginPage extends React.Component {
         //     username: "",
         //     topic: ""
         // });
+        
     }
 
     handleUploadPhoto = e => {
@@ -98,6 +99,16 @@ class LoginPage extends React.Component {
             console.log("wrong info");
         }
     }
+
+    changePage = e => {
+        e.preventDefault();
+        if (this.state.roomCode == "PizzaMeeting" && this.state.roomPass == "1234") {
+            window.location.pathname = "/topicSuggestion";
+        }
+        else {
+            alert("check your inputs!");
+        }
+    }
  
     render() { 
         return (
@@ -130,8 +141,8 @@ class LoginPage extends React.Component {
                         <div className="photo-upload">
                             <Form.File type="file" onChange={this.handleChange}
                             label="Upload Food Picture" />
-                            <img height="100" width="100%" src={this.state.url}/>
-                            <button onClick={this.handleUploadPhoto}>Upload Picture</button>
+                            {(this.state.url == "") ? <div></div> : <img height="100" width="100%" src={this.state.url}/>}
+                            <button className="upload-pic" onClick={this.handleUploadPhoto}>Upload Picture</button>
                         </div>
                     </Form.Group>
     
@@ -142,15 +153,16 @@ class LoginPage extends React.Component {
                     </Form.Group>
                     
                     <div className="form-nav">
-                        {(this.state.roomCode == "PizzaMeeting" && this.state.roomPass == "1234") ? 
-                            <Link to="/join">
+                        {/* <Link to="/topicSuggestion">
+                            <button className="primary-button">Join Room</button>
+                        </Link> : */}
+                        <button onClick={this.changePage} className="primary-button">Join Room</button>
+                        {/* {(this.state.roomCode == "PizzaMeeting" && this.state.roomPass == "1234") ? 
+                            <Link to="/topicSuggestion">
                                 <button className="primary-button">Join Room</button>
                             </Link> :
-                            <button className="primary-button">Join Room</button>
-                        }
-                        {/* <Link to="/join">
-                            <button onClick={this.checkRoomInfo} className="primary-button">Join Room</button>
-                        </Link> */}
+                            <button onClick={e => this.showAlert(e)} className="primary-button">Join Room</button>
+                        } */}
                         <Link className="back-mainpage" to="/">Back To Mainpage</Link>
                     </div>
                 </Form>
