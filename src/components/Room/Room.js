@@ -206,6 +206,7 @@ const Room = (props) => {
   }
 
   function createUserVideo(peer, index, arr) {
+    // console.log("createUserVideo ", peer);
     return (
       <div >
       <VideoContainer className='room-video-container'>
