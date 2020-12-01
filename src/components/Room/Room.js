@@ -31,26 +31,58 @@ const Room = (props) => {
   const [screenShare, setScreenShare] = useState(false);
   const [foodImage, setFoodImage] = useState("");
   const [firebaseUrl, setFirebaseUrl] = useState([]);
+  
 
   console.log("displayAdd: ", displayAdd);
   
   const peersRef = useRef([]);
   const userVideoRef = useRef();
+  const localVideoComponent = useRef();
+  const remoteVideoComponent = useRef();
   const screenTrackRef = useRef();
   const userStream = useRef();
   var roomId = props.match.params.roomId;
-  console.log("Room ", sessionStorage);
-
-  //replace with firebase pictures
-  //get picture from database
-  const images = firebase.storage().ref().child('foodImages');
-  images.child(currentUser).getDownloadURL().then(function(url) {
-    setFoodImage(url);
-  })
-  // console.log("image: ", foodImage);
+  let localStream
+  let remoteStream
+  let isRoomCreator
+  let rtcPeerConnection // Connection between the local device and the remote peer.
+  const mediaConstraints = {
+  audio: true,
+  video: { width: 1280, height: 720 },
+  }
 
   const foodBackground = {
     backgroundImage: `url(${foodImage})`
+  }
+
+  // Free public STUN servers provided by Google.
+  const iceServers = {
+    iceServers: [
+      { urls: 'stun:stun.l.google.com:19302' },
+      { urls: 'stun:stun1.l.google.com:19302' },
+      { urls: 'stun:stun2.l.google.com:19302' },
+      { urls: 'stun:stun3.l.google.com:19302' },
+      { urls: 'stun:stun4.l.google.com:19302' },
+    ],
+  }
+
+  async function setLocalStream(mediaConstraints) {
+  let stream
+  try {
+    stream = await navigator.mediaDevices.getUserMedia(mediaConstraints)
+  } catch (error) {
+    console.error('Could not get user media', error)
+  }
+
+  localStream = stream;
+  
+  if (localVideoComponent.current) {
+    console.log("localVideoCompoenent not null!");
+    localVideoComponent.current.srcObject = stream;
+  }
+  
+  // userVideoRef.current.srcObject = stream;
+  console.log("localvideocomponent ", localVideoComponent, userVideoRef);
   }
 
   // console.log("firebaseUrl: ", firebaseUrl);
@@ -59,103 +91,156 @@ const Room = (props) => {
     // Set Back Button Event
     window.addEventListener('popstate', goToBack);
     console.log("peers ", peers);
-    // Connect Camera & Mic
-    navigator.mediaDevices
-      .getUserMedia({ video: true, audio: true })
-      .then((stream) => {
-        userVideoRef.current.srcObject = stream;
-        userStream.current = stream;
-        // console.log(currentUser);
         socket.emit('BE-join-room', { roomId, userName: currentUser});
         socket.on('FE-user-join', (users) => {
           // all users
           console.log(users);
           const peers = [];
-          users.forEach(({ userId, info }) => {
-            let { userName, video, audio } = info;
-
-            if (userName !== currentUser) {
-              const peer = createPeer(userId, socket.id, stream, roomId);
-
-              peer.userName = userName;
-              peer.peerID = userId;
-
-              peersRef.current.push({
-                peerID: userId,
-                peer,
-                userName,
-              });
-              peers.push(peer);
-
-              setUserVideoAudio((preList) => {
-                return {
-                  ...preList,
-                  [peer.userName]: { video, audio },
-                };
-              });
-            }
-          });
 
           setPeers(peers);
+
+        // socket.on('FE-receive-call', ({ signal, from, info }) => {
+        //   let { userName, video, audio } = info;
+        //   const peerIdx = findPeer(from);
+        // });
+
+        // socket.on('FE-call-accepted', ({ signal, answerId }) => {
+        //   const peerIdx = findPeer(answerId);
+        //   peerIdx.peer.signal(signal);
+        // });
+
+        // socket.on('FE-user-leave', ({ userId, userName }) => {
+        //   const peerIdx = findPeer(userId);
+        //   peerIdx.peer.destroy();
+        //   setPeers((users) => {
+        //     users = users.filter((user) => user.peerID !== peerIdx.peer.peerID);
+        //     return [...users];
+        //   });
         });
 
-        socket.on('FE-receive-call', ({ signal, from, info }) => {
-          let { userName, video, audio } = info;
-          const peerIdx = findPeer(from);
+        // SOCKET EVENT CALLBACKS =====================================================
+        socket.on('room_created', async () => {
+          console.log('Socket event callback: room_created')
 
-          if (!peerIdx) {
-            const peer = addPeer(signal, from, stream);
+          await setLocalStream(mediaConstraints)
+          isRoomCreator = true
+        })
 
-            peer.userName = userName;
+        socket.on('room_joined', async () => {
+          console.log('Socket event callback: room_joined')
 
-            peersRef.current.push({
-              peerID: from,
-              peer,
-              userName: userName,
-            });
-            setPeers((users) => {
-              return [...users, peer];
-            });
-            setUserVideoAudio((preList) => {
-              return {
-                ...preList,
-                [peer.userName]: { video, audio },
-              };
-            });
+          await setLocalStream(mediaConstraints)
+          socket.emit('start_call', roomId)
+        })
+
+        socket.on('full_room', () => {
+          console.log('Socket event callback: full_room')
+
+          alert('The room is full, please try another one')
+        })
+
+        // SOCKET EVENT CALLBACKS =====================================================
+        socket.on('start_call', async () => {
+          console.log('Socket event callback: start_call')
+
+          if (isRoomCreator) {
+            rtcPeerConnection = new RTCPeerConnection(iceServers)
+            addLocalTracks(rtcPeerConnection)
+            rtcPeerConnection.ontrack = setRemoteStream
+            rtcPeerConnection.onicecandidate = sendIceCandidate
+            await createOffer(rtcPeerConnection)
           }
-        });
+        })
 
-        socket.on('FE-call-accepted', ({ signal, answerId }) => {
-          const peerIdx = findPeer(answerId);
-          peerIdx.peer.signal(signal);
-        });
+        socket.on('webrtc_offer', async (event) => {
+          console.log('Socket event callback: webrtc_offer')
 
-        socket.on('FE-user-leave', ({ userId, userName }) => {
-          const peerIdx = findPeer(userId);
-          peerIdx.peer.destroy();
-          setPeers((users) => {
-            users = users.filter((user) => user.peerID !== peerIdx.peer.peerID);
-            return [...users];
-          });
-        });
-      });
+          if (!isRoomCreator) {
+            rtcPeerConnection = new RTCPeerConnection(iceServers)
+            addLocalTracks(rtcPeerConnection)
+            rtcPeerConnection.ontrack = setRemoteStream
+            rtcPeerConnection.onicecandidate = sendIceCandidate
+            rtcPeerConnection.setRemoteDescription(new RTCSessionDescription(event))
+            await createAnswer(rtcPeerConnection)
+          }
+        })
 
-    socket.on('FE-toggle-camera', ({ userId, switchTarget }) => {
-      const peerIdx = findPeer(userId);
+        socket.on('webrtc_answer', (event) => {
+          console.log('Socket event callback: webrtc_answer')
 
-      setUserVideoAudio((preList) => {
-        let video = preList[peerIdx.userName].video;
-        let audio = preList[peerIdx.userName].audio;
+          rtcPeerConnection.setRemoteDescription(new RTCSessionDescription(event))
+        })
 
-        if (switchTarget === 'video') video = !video;
-        else audio = !audio;
+        socket.on('webrtc_ice_candidate', (event) => {
+          console.log('Socket event callback: webrtc_ice_candidate')
 
-        return {
-          ...preList,
-          [peerIdx.userName]: { video, audio },
-        };
-      });
-    });
+          // ICE candidate configuration.
+          var candidate = new RTCIceCandidate({
+            sdpMLineIndex: event.label,
+            candidate: event.candidate,
+          })
+          rtcPeerConnection.addIceCandidate(candidate)
+        })
+
+        // FUNCTIONS ==================================================================
+        function addLocalTracks(rtcPeerConnection) {
+          localStream.getTracks().forEach((track) => {
+            rtcPeerConnection.addTrack(track, localStream)
+          })
+        }
+
+        async function createOffer(rtcPeerConnection) {
+          let sessionDescription
+          try {
+            sessionDescription = await rtcPeerConnection.createOffer()
+            rtcPeerConnection.setLocalDescription(sessionDescription)
+          } catch (error) {
+            console.error(error)
+          }
+
+          socket.emit('webrtc_offer', {
+            type: 'webrtc_offer',
+            sdp: sessionDescription,
+            roomId,
+          })
+        }
+
+        async function createAnswer(rtcPeerConnection) {
+          let sessionDescription
+          try {
+            sessionDescription = await rtcPeerConnection.createAnswer()
+            rtcPeerConnection.setLocalDescription(sessionDescription)
+          } catch (error) {
+            console.error(error)
+          }
+
+          socket.emit('webrtc_answer', {
+            type: 'webrtc_answer',
+            sdp: sessionDescription,
+            roomId,
+          })
+        }
+
+        function setRemoteStream(event) {
+          console.log("setRemoteStream ", remoteVideoComponent);
+          remoteVideoComponent.current.srcObject = event.streams[0]
+          remoteStream = event.stream
+        }
+
+        function sendIceCandidate(event) {
+          if (event.candidate) {
+            socket.emit('webrtc_ice_candidate', {
+              roomId,
+              label: event.candidate.sdpMLineIndex,
+              candidate: event.candidate.candidate,
+            })
+          }
+        }
+
+
+
+
+
 
     return () => {
       socket.disconnect();
@@ -163,63 +248,6 @@ const Room = (props) => {
     // eslint-disable-next-line
   }, []);
 
-  useEffect(() => {
-    const start = new Date();
-    let latestCheckTime = start;
-    const intervalId = setInterval(() => {
-      const now = new Date();
-      const delta = now - latestCheckTime;
-      console.log(delta);
-      latestCheckTime = now;
-      //update firebase user studytime by adding
-    }, 60000);
-    return () => {
-      // unmount
-      clearInterval(intervalId);
-    }
-  }, []);
-
-  function createPeer(userId, caller, stream, roomId) {
-    const peer = new Peer({
-      initiator: true,
-      trickle: false,
-      stream,
-    });
-
-    peer.on('signal', (signal) => {
-      socket.emit('BE-call-user', {
-        userToCall: userId,
-        from: caller,
-        signal,
-        roomId: roomId,
-      });
-    });
-    peer.on('disconnect', () => {
-      peer.destroy();
-    });
-
-    return peer;
-  }
-
-  function addPeer(incomingSignal, callerId, stream) {
-    const peer = new Peer({
-      initiator: false,
-      trickle: false,
-      stream,
-    });
-
-    peer.on('signal', (signal) => {
-      socket.emit('BE-accept-call', { signal, to: callerId });
-    });
-
-    peer.on('disconnect', () => {
-      peer.destroy();
-    });
-
-    peer.signal(incomingSignal);
-
-    return peer;
-  }
 
   function findPeer(id) {
     return peersRef.current.find((p) => p.peerID === id);
@@ -237,10 +265,10 @@ const Room = (props) => {
     // images.child(peer.userName).getDownloadURL().then(function(url) {
     //   setFirebaseUrl(firebaseUrl => ({...firebaseUrl, [peer.userName]: url}))
     // });
-
-    const peerName = peer.userName;
+    console.log("createUserVideo ", peer);
+    // const peerName = peer.userName;
     // console.log("firebaseUrl: ", firebaseUrl.wulanfrom);
-    console.log("firebase peername:", firebaseUrl.peerName);
+    // console.log("firebase peername:", firebaseUrl.peerName);
     
     return (
       <div >
@@ -254,13 +282,13 @@ const Room = (props) => {
           >
             {/* {writeUserName(peer.userName)} */}
             {/* <FaIcon className="fas fa-expand" /> */}
-            <VideoCard key={index} peer={peer} number={arr.length} />
+            <VideoCard key={index} peer={peer} number={arr.length} ref={remoteVideoComponent}/>
           </VideoBox>
         }
         <UserName className='room-userName'>{peer.userName}</UserName>
-        {/* <UserFood className='room-userFood'>
-              <img src={`url(${firebaseUrl})`'} width="300" height="300" alt={peer.userName} />
-        </UserFood> */}
+        <UserFood className='room-userFood'>
+              <img src={'https://i.fltcdn.net/contents/984/original_1420785942178_y0nppv3rf6r.octet-stream'} width="300" height="300" alt={peer.userName} />
+        </UserFood>
         <AddButton className='room-wishlist-addbutton' onClick={clickAdd}>
           <img src={wishicon} alt="add wish"/>
         </AddButton>
@@ -334,6 +362,7 @@ const Room = (props) => {
   };
 
   const toggleCameraAudio = (e) => {
+    console.log("toggle")
     const target = e.target.getAttribute('data-switch');
 
     setUserVideoAudio((preList) => {
@@ -364,65 +393,6 @@ const Room = (props) => {
     socket.emit('BE-toggle-camera-audio', { roomId, switchTarget: target });
   };
 
-  const clickScreenSharing = () => {
-    if (!screenShare) {
-      navigator.mediaDevices
-        .getDisplayMedia({ cursor: true })
-        .then((stream) => {
-          const screenTrack = stream.getTracks()[0];
-
-          peersRef.current.forEach(({ peer }) => {
-            // replaceTrack (oldTrack, newTrack, oldStream);
-            peer.replaceTrack(
-              peer.streams[0]
-                .getTracks()
-                .find((track) => track.kind === 'video'),
-              screenTrack,
-              userStream.current
-            );
-          });
-
-          // Listen click end
-          screenTrack.onended = () => {
-            peersRef.current.forEach(({ peer }) => {
-              peer.replaceTrack(
-                screenTrack,
-                peer.streams[0]
-                  .getTracks()
-                  .find((track) => track.kind === 'video'),
-                  userStream.current
-              );
-            });
-            userVideoRef.current.srcObject = userStream.current;
-            setScreenShare(false);
-          };
-
-          userVideoRef.current.srcObject = stream;
-          screenTrackRef.current = screenTrack;
-          setScreenShare(true);
-        });
-    } else {
-      screenTrackRef.current.onended();
-    }
-  };
-
-  const expandScreen = (e) => {
-    const elem = e.target;
-
-    if (elem.requestFullscreen) {
-      elem.requestFullscreen();
-    } else if (elem.mozRequestFullScreen) {
-      /* Firefox */
-      elem.mozRequestFullScreen();
-    } else if (elem.webkitRequestFullscreen) {
-      /* Chrome, Safari & Opera */
-      elem.webkitRequestFullscreen();
-    } else if (elem.msRequestFullscreen) {
-      /* IE/Edge */
-      elem.msRequestFullscreen();
-    }
-  };
-
   return (
     <RoomContainer>
       <Layout/>
@@ -443,31 +413,35 @@ const Room = (props) => {
               >
                 <FaIcon className="fas fa-expand" />
                 <MyVideo
-                  onClick={expandScreen}
-                  ref={userVideoRef}
+                  ref={localVideoComponent}
                   muted
                   autoPlay
                   playInline
                   // className = 'myvideo'
               ></MyVideo>
               </VideoBox>
-              {/* <UserFood className='room-userFood'>
+              <UserFood className='room-userFood'>
                 <img src={'https://thumbs.dreamstime.com/b/liver-detox-diet-food-concept-fruits-vegetables-nuts-olive-oil-garlic-cleansing-body-healthy-eating-top-view-flat-lay-liver-166983115.jpg'} />
-              </UserFood> */}
+              </UserFood>
               <UserName className='room-userName'>{currentUser}</UserName>
 
           </VideoContainer>
+
+          <MyVideo ref={remoteVideoComponent} autoPlay muted playInline > </MyVideo>
             {/* Joined User Vidoe */}
             {peers &&
               peers.map((peer, index, arr) => {
-                addImageList(peer)
+                // addImageList(peer)
+                console.log("how many peers? ", peers.length);
+                console.log("who are the peer ", peer);
+                console.log("who are the peersRef ", peersRef);
+                console.log("who are the uservideoRef ", userVideoRef);
                 createUserVideo(peer, index, arr)
               })
             }
         </div>
         }
         <BottomBar
-          clickScreenSharing={clickScreenSharing}
           clickChat={clickChat}
           clickWish={clickWish}
           goToBack={goToBack}

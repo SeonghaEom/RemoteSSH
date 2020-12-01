@@ -6,6 +6,7 @@ import mute from '../../assets/mute.svg';
 import volume from '../../assets/volume.svg';
 import logout from '../../assets/logout.svg';
 import mic from '../../assets/mic.svg';
+import { useHistory } from 'react-router-dom';
 
 const BottomBar = ({
   clickChat,
@@ -17,7 +18,9 @@ const BottomBar = ({
   userVideoAudio,
   clickScreenSharing,
   screenShare,
+  goToScreen,
 }) => {
+  let history = useHistory()
   return (
     <Bar>
       <Left>
@@ -42,7 +45,10 @@ const BottomBar = ({
           </div>
           Wish List
         </WishList>
-        <OtherTable onClick={goToOtherTable}>
+        <OtherTable onClick={(e) => {
+          goToOtherTable(e);
+          // history.go(0);
+          }}>
           <div >
             <img src={other_tables} />
           </div>
