@@ -31,6 +31,7 @@ const Room = (props) => {
   const [screenShare, setScreenShare] = useState(false);
   const [foodImage, setFoodImage] = useState("");
   const [firebaseUrl, setFirebaseUrl] = useState([]);
+  const [other, setOther] = useState(false);
   
 
   console.log("displayAdd: ", displayAdd);
@@ -48,7 +49,7 @@ const Room = (props) => {
   let rtcPeerConnection // Connection between the local device and the remote peer.
   const mediaConstraints = {
   audio: true,
-  video: { width: 1280, height: 720 },
+  video: true,
   }
 
   const foodBackground = {
@@ -119,15 +120,17 @@ const Room = (props) => {
         });
 
         // SOCKET EVENT CALLBACKS =====================================================
-        socket.on('room_created', async () => {
-          console.log('Socket event callback: room_created')
+        socket.on('room_created', async ({roomId, userName}) => {
+          console.log(userName, ' Socket event callback: room_created ', roomId)
 
           await setLocalStream(mediaConstraints)
           isRoomCreator = true
         })
 
-        socket.on('room_joined', async () => {
-          console.log('Socket event callback: room_joined')
+        socket.on('room_joined', async ({roomId, userName}) => {
+          console.log(userName, ' Socket event callback: room_joined ', roomId)
+          setPeers([...peers, userName])
+          setOther(userName);
 
           await setLocalStream(mediaConstraints)
           socket.emit('start_call', roomId)
@@ -149,6 +152,7 @@ const Room = (props) => {
             rtcPeerConnection.ontrack = setRemoteStream
             rtcPeerConnection.onicecandidate = sendIceCandidate
             await createOffer(rtcPeerConnection)
+            setOther(true);
           }
         })
 
@@ -394,7 +398,10 @@ const Room = (props) => {
   };
 
   return (
+    <div className='room-title'>
+      <div className='room-title-text'> You're now in room {roomId}</div>
     <RoomContainer>
+      
       <Layout/>
       <VideoAndBarContainer>
         {displayWish ?
@@ -406,7 +413,7 @@ const Room = (props) => {
         displayVolume?
         <Volume display={displayVolume} goToScreen={goToVolume}/> :
         <div className="room-display-every">
-          <VideoContainer style={foodBackground} className='room-video-container'>
+          <VideoContainer className='room-video-container'>
             {/* Current User Video */}
               <VideoBox
               className='room-video-box'
@@ -421,13 +428,33 @@ const Room = (props) => {
               ></MyVideo>
               </VideoBox>
               <UserFood className='room-userFood'>
-                <img src={'https://thumbs.dreamstime.com/b/liver-detox-diet-food-concept-fruits-vegetables-nuts-olive-oil-garlic-cleansing-body-healthy-eating-top-view-flat-lay-liver-166983115.jpg'} />
+                <img src={'https://pakwired.com/wp-content/uploads/2017/09/pizza-1.jpg'} />
               </UserFood>
               <UserName className='room-userName'>{currentUser}</UserName>
 
           </VideoContainer>
+          {other && 
+            <VideoContainer className='room-video-container'>
+              <VideoBox
+              className='room-video-box'
+              >
+                <FaIcon className="fas fa-expand" />
+                <MyVideo
+                  ref={remoteVideoComponent}
+                  muted
+                  autoPlay
+                  playInline
+                  // className = 'myvideo'
+              ></MyVideo>
+              </VideoBox>
+              <UserFood className='room-userFood'>
+                <img src={'https://pakwired.com/wp-content/uploads/2017/09/pizza-1.jpg'} />
+              </UserFood>
+              <UserName className='room-userName'>{other}</UserName>
+          </VideoContainer>
+          
+          }
 
-          <MyVideo ref={remoteVideoComponent} autoPlay muted playInline > </MyVideo>
             {/* Joined User Vidoe */}
             {peers &&
               peers.map((peer, index, arr) => {
@@ -456,6 +483,7 @@ const Room = (props) => {
       <Chat display={displayChat} roomId={roomId}/>
       
     </RoomContainer>
+    </div>
   );
 };
 

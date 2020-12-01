@@ -108,11 +108,11 @@ io.on('connection', (socket) => {
     if (numberOfClients == 0) {
       console.log(`Creating room ${roomId} and emitting room_created socket event`)
       socket.join(roomId)
-      socket.emit('room_created', roomId)
+      socket.emit('room_created',{roomId: roomId, userName: userName})
     } else if (numberOfClients == 1) {
-      console.log(`Joining room ${roomId} and emitting room_joined socket event`)
+      console.log(`${userName} Joining room ${roomId} and emitting room_joined socket event`)
       socket.join(roomId)
-      socket.emit('room_joined', roomId)
+      socket.emit('room_joined', {roomId: roomId, userName: userName} )
     } else {
       console.log(`Can't join room ${roomId}, emitting full_room socket event`)
       socket.emit('full_room', roomId)
