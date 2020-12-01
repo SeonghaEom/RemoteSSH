@@ -149,10 +149,11 @@ const Room = (props) => {
           if (isRoomCreator) {
             rtcPeerConnection = new RTCPeerConnection(iceServers)
             addLocalTracks(rtcPeerConnection)
+            setOther(true);
             rtcPeerConnection.ontrack = setRemoteStream
             rtcPeerConnection.onicecandidate = sendIceCandidate
             await createOffer(rtcPeerConnection)
-            setOther(true);
+            
           }
         })
 
