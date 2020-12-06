@@ -3,6 +3,7 @@ import {useLocation} from 'react-router-dom';
 import styled from 'styled-components';
 import socket from '../../socket';
 import NavbarEmpty from '../Navbar/NavbarEmpty';
+import { v1 as uuid } from "uuid";
 
 function useQuery() {
     return new URLSearchParams(useLocation().search);
@@ -22,29 +23,11 @@ const Join = (props) => {
     const [roomId, setRoomId] = useState(query.get('roomId') || '');
     const [userName, setUserName] = useState('');
 
-    useEffect(() => {
-
-        socket.on('FE-error-user-exist', ({error, roomId, userName}) => {
-            if (!error) {
-                // console.log("Join ", userName, roomId);
-                sessionStorage.setItem('user', userName);
-                props.history.push(`/room/${roomId}`);
-
-            } else {
-                setErr(error);
-                setErrMsg('User name already exist');
-            }
-        });
-    }, [props.history]);
 
     function clickJoin() {
-        if (!roomId || !userName) {
-            setErr(true);
-            setErrMsg('Enter Room Name or User Name');
-        } else {
-          // console.log("Join ", userName, roomId);
-            socket.emit('BE-check-user', {roomId: roomId, userName});
-        }
+        sessionStorage.setItem('user', userName);
+        const id = uuid();
+        props.history.push(`/room/${id}`);
     }
 
     return (

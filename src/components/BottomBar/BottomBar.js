@@ -14,8 +14,8 @@ const BottomBar = ({
   goToBack,
   goToOtherTable,
   goToVolume,
-  toggleCameraAudio,
-  userVideoAudio,
+  // toggleCameraAudio,
+  // mediaConstraints,
   clickScreenSharing,
   screenShare,
   goToScreen,
@@ -26,9 +26,9 @@ const BottomBar = ({
       <Left>
       </Left>
       <Center>
-        <CameraButton onClick={toggleCameraAudio} data-switch="audio">
+        <CameraButton  data-switch="audio">
           <div>
-            {userVideoAudio.audio ? (
+            {true ? (
               // <FaIcon className="fas fa-microphone"></FaIcon>
               <img src={mic} />
             ) : (
