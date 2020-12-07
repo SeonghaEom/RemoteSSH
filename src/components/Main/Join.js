@@ -10,14 +10,16 @@ function useQuery() {
 
 const Join = (props) => {
   var currentUser = sessionStorage.getItem('user');
+  const currentRoomCode = sessionStorage.getItem('roomCode');
+  const [userName, setUserName] = useState(currentUser);
     const userRef = useRef();
     const [err, setErr] = useState(false);
     const [errMsg, setErrMsg] = useState('');
 
     const query = useQuery();
  
-    const [roomId, setRoomId] = useState(query.get('roomId') || '');
-    const [userName, setUserName] = useState(currentUser);
+    const [roomId, setRoomId] = useState(currentRoomCode || '');
+    
 
     const [roomList, setRoomList] = useState({}); // {roomId, users}
     const [userList, setUserList] = useState([]);
@@ -94,8 +96,7 @@ const Join = (props) => {
         <MainContainer>
             <NavbarEmpty/>
             
-            <h2 className="join-command">Type in either 'cheese' or 'peperoni', or anything and freely switch rooms! </h2>
-            <h3 className="join-command"> In developing mode, so if error happens, always reload :p </h3>
+            <h2 className="join-command">You can create a new room or enter existing rooms! </h2>
             <Row id="room-input">
                 <Label htmlFor="roomName">Room Name</Label>
                 <Input value={roomId} type="text" id="roomName" onChange={(e) => {

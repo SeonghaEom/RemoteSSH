@@ -102,13 +102,12 @@ class LoginPage extends React.Component {
 
     changePage = e => {
         e.preventDefault();
-        if (this.state.roomCode == "PizzaMeeting" && this.state.roomPass == "1234") {
-            window.location.pathname = "/topicSuggestion";
-            sessionStorage.setItem('user', this.state.username);
-        }
-        else {
-            alert("check your inputs!");
-        }
+
+        window.location.pathname = "/topicSuggestion";
+        sessionStorage.setItem('user', this.state.username);
+        sessionStorage.setItem('roomCode', this.state.roomPass);
+        sessionStorage.setItem('roomName', this.state.roomCode);
+
     }
  
     render() { 
@@ -117,8 +116,8 @@ class LoginPage extends React.Component {
                 <NavbarEmpty/>
     
                 <Alert className="demo-alert">
-                    We are currently in the Demo Phase. Try our features with our trial Meeting room code 
-                    <b> PizzaMeeting</b> and Code <b>1234.</b>
+                    We are currently in the Demo Phase. Try our features with our trial Meeting room name 
+                    <b> PizzaMeeting</b> and given code.
                 </Alert>    
     
                 <Form className="login-forms" onSubmit={this.addInfo}>
@@ -129,11 +128,11 @@ class LoginPage extends React.Component {
                         onChange={this.updateInput} value={this.state.username}
                         placeholder="Username" />
     
-                        <Form.Label>Meeting Room Code</Form.Label>
+                        <Form.Label>Meeting Room Name</Form.Label>
                         <Form.Control onChange={this.updateInput}  name="roomCode" value={this.state.roomCode} required type="text" placeholder="Example: PizzaMeeting" />
     
-                        <Form.Label>Meeting Room Password</Form.Label>
-                        <Form.Control onChange={this.updateInput} name="roomPass" value={this.state.roomPass} required type="text" placeholder="Example: 1234" />
+                        <Form.Label>Meeting Room Code</Form.Label>
+                        <Form.Control onChange={this.updateInput} name="roomPass" value={this.state.roomPass} required type="text" placeholder="" />
                         </div>
     
                         <div className="separator"></div>

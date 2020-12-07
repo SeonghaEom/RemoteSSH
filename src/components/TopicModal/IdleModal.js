@@ -4,25 +4,6 @@ import Button from 'react-bootstrap/Button';
 import firestore from '../../config/fbconfig';
 import * as firebase from 'firebase';
 
-var rows= [];
-var hey;
-async function get() {
-  
-  await firestore.collection('Topics').get()
-    .then((snapshot)=>{
-      // var rows= [];
-      snapshot.forEach((doc) => {
-        const topic = doc.data();
-        console.log(topic)
-        hey = topic['text']
-        rows.push({...topic});
-      })
-    });
-
-  return rows;
-  }
-  
-
 export const IdleTimeOutModal = ({showModal, handleClose}) => {
     const [topicList, setTopicList] = useState();
     const [idx, setIdx] = useState(0);
@@ -52,12 +33,13 @@ export const IdleTimeOutModal = ({showModal, handleClose}) => {
             <Modal.Body>{topicList ? topicList[idx]['topic'] : "Let's talk about favorite restaurant!"}</Modal.Body>
             <Modal.Footer>
             <Button variant="danger" onClick={() => {
-              handleClose();
+              idx >= topicList.length -1 ?
+              setIdx(0):
               setIdx(idx + 1);}}>
-                Like
+                Next
             </Button>
             <Button variant="primary" onClick={handleClose}>
-                Exit
+                Select
             </Button>
             </Modal.Footer>
         </Modal>

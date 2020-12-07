@@ -15,8 +15,8 @@ import io from "socket.io-client";
 import * as firebase from 'firebase'
 
 const StyledVideo = styled.video`
-    height: 40%;
-    width: 50%;
+    height: 35vh;
+    width: 35vw;
 `;
 
 const Video = (props) => {
@@ -40,7 +40,6 @@ const videoConstraints = {
 
 function Room(props) {
   var currentUser = sessionStorage.getItem('user');
-  const roomName = sessionStorage.getItem('roomName');
   // console.log("current user: ", currentUser);
     const [peers, setPeers] = useState([]);
     const socketRef = useRef();
@@ -297,6 +296,7 @@ function Room(props) {
   
   return (
     <div className='room-title'>
+      <div className='room-title-text'> room code : {props.match.params.roomID}</div>
     <RoomContainer>
       
       <Layout/>
@@ -318,20 +318,22 @@ function Room(props) {
                 <FaIcon className="fas fa-expand" />
                 <StyledVideo muted ref={userVideo} autoPlay playsInline />
               </VideoBox>
-              <UserFood className='room-userFood'>
+              {/* <UserFood className='room-userFood'>
                 <img src={'https://pakwired.com/wp-content/uploads/2017/09/pizza-1.jpg'} />
-              </UserFood>
+              </UserFood> */}
               <UserName className='room-userName'>{currentUser}</UserName>
 
           </VideoContainer>
-            {/* Joined User Vidoe */}
-            {peers &&
-              peers.map((peer, index, arr) => {
-                return (
-                    <Video key={index} peer={peer} />
-                );
-            })
-            }
+          {/* Joined User Vidoe */}
+          {peers &&
+            peers.map((peer, index, arr) => {
+              return (
+                <VideoContainer className='room-video-container'>
+                  <Video key={index} peer={peer} />
+                </VideoContainer>
+              );
+          })
+          }
         </div>
         }
         <BottomBar
