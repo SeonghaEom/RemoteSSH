@@ -29,7 +29,7 @@ function App() {
                 <Route exact path="/room-list" component={RoomList} />
                 <Route exact path="/join" component={Join} />
                 <Route exact path="/otherroom" component={OtherRoom} />
-                <Route exact path="/room/:roomId" component={Room} />
+                <Route exact path="/room/:roomID" component={Room} />
                 <Route exact path="/login" component={LoginPage} />
                 <Route exact path="/topicSuggestion" component={TopicSuggestion} />
             </Switch>

@@ -22,12 +22,35 @@ const Join = (props) => {
  
     const [roomId, setRoomId] = useState(query.get('roomId') || '');
     const [userName, setUserName] = useState('');
+    const [roomList, setRoomList] = useState();
 
 
-    function clickJoin() {
+    useEffect(() => {
+      async function fetchData(){
+        await fetch(' https://e20f32fed856.ngrok.io/room-list')
+        // await fetch('https://remote-ssh.graymove.com/room-list')
+          .then(function(response) {
+            return response.json();
+        }).then((json) => {
+          console.log("join json", json);
+          setRoomList(json);
+          
+        })}
+      fetchData();
+
+    }, []);
+
+
+    function clickCreate() {
         sessionStorage.setItem('user', userName);
         const id = uuid();
         props.history.push(`/room/${id}`);
+    }
+
+    function clickJoin() {
+        sessionStorage.setItem('user', userName);
+        // const id = uuid();
+        props.history.push(`/room/${roomId}`);
     }
 
     return (
@@ -49,6 +72,7 @@ const Join = (props) => {
                 }}/>
             </Row>
             <JoinButton onClick={clickJoin}> Join </JoinButton>
+            <JoinButton onClick={clickCreate}> Create </JoinButton>
             {err ? <Error>{errMsg}</Error> : null}
         </MainContainer>
     );

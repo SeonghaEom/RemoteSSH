@@ -58,12 +58,6 @@ const Room = (props) => {
   const [foodImage, setFoodImage] = useState("");
   const [firebaseUrl, setFirebaseUrl] = useState([]);
 
-  var roomId = props.match.params.roomId;
-  let localStream
-  let remoteStream
-  let isRoomCreator
-  let rtcPeerConnection // Connection between the local device and the remote peer.
-
 
   // console.log("firebaseUrl: ", firebaseUrl);
   useEffect(() => {
@@ -226,10 +220,12 @@ const Room = (props) => {
 
   // BackButton
   const goToOtherTable = (e) => {
-    e.stopPropagation();
-    setDisplayOtherTable(!displayOtherTable);
-    console.log(displayOtherTable);
-    // e.preventDefault();
+    // e.stopPropagation();
+    // setDisplayOtherTable(!displayOtherTable);
+    // console.log(displayOtherTable);
+    e.preventDefault();
+    socketRef.current.disconnect();
+    window.location.href = '/join';
     // socket.emit('BE-leave-room', { roomId, leaver: currentUser });
     // sessionStorage.removeItem('user');
     // window.location.href = '/room-list';
@@ -247,7 +243,8 @@ const Room = (props) => {
 
   const goToBack = (e) => {
     e.preventDefault();
-    socket.emit('BE-leave-room', { roomId, leaver: currentUser });
+    // socket.emit('BE-leave-room', { roomId, leaver: currentUser });
+    socketRef.current.disconnect();
     sessionStorage.removeItem('user');
     window.location.href = '/';
   };
@@ -289,7 +286,6 @@ const Room = (props) => {
 
   return (
     <div className='room-title'>
-      <div className='room-title-text'> You're now in room {roomId}</div>
     <RoomContainer>
       
       <Layout/>
@@ -299,7 +295,7 @@ const Room = (props) => {
         displayAdd ?
         <AddWish display ={displayAdd} setWishList={setWishList} wishlist={wishlist} userName={currentUser} userFood={'https://images.pexels.com/photos/708587/pexels-photo-708587.jpeg?auto=compress&cs=tinysrgb&h=750&w=1260'} goToScreen={clickAdd} />:
         displayOtherTable ?
-        <RoomList display={displayOtherTable} roomId={roomId} goToScreen={goToOtherTable}/> :
+        <RoomList display={displayOtherTable} roomId={roomID} goToScreen={goToOtherTable}/> :
         displayVolume?
         <Volume display={displayVolume} goToScreen={goToVolume}/> :
         <div className="room-display-every">
@@ -339,7 +335,6 @@ const Room = (props) => {
           screenShare={screenShare}
         />
       </VideoAndBarContainer>
-      <Chat display={displayChat} roomId={roomId}/>
       
     </RoomContainer>
     </div>
