@@ -78,21 +78,25 @@ io.on('connection', socket => {
     });
 
     socket.on("returning signal", payload => {
+        console.log("socketToRoom ", socketToRoom);
+        console.log("users ", users);
         io.to(payload.callerID).emit('receiving returned signal', { signal: payload.signal, id: socket.id });
     });
 
     socket.on('disconnect', () => {
         console.log(socket.id, "is disconnected socketToRoom", socketToRoom);
-        console.log("disconnect users", users);
+        
         const roomID = socketToRoom[socket.id];
         let room = users[roomID]; //all connected peer sockets
         if (room) {
-            room = room.filter(each => each.socketID !== socket.id);
+            room = room.filter(socketID => socketID !== socket.id);
+            console.log("room ", room);
             users[roomID] = room;
             room.forEach(socketID => {
               io.to(socketID).emit("user left", socket.id);
             })
         }
+        console.log("disconnect users", users);
     });
 
 });
@@ -106,12 +110,12 @@ http.listen(PORT, () => {
 
 
 // send createdRooms and socketList
-app.get('/otherrooms', (req, res) => {
-  res.send({
-    "rooms": createdRooms,
-    "users": socketList,
-  });
-});
+// app.get('/otherrooms', (req, res) => {
+//   res.send({
+//     "rooms": createdRooms,
+//     "users": socketList,
+//   });
+// });
 
 app.get('/room-list', (req, res) => {
   // const rawRoomIds = Object.keys(io.sockets.adapter.rooms);

@@ -29,7 +29,7 @@ const Join = (props) => {
           .then(function(response) {
             return response.json();
         }).then((json) => {
-          // console.log("roomlist ", Object.keys(json));
+          console.log("users in server ", json);
           // console.log("userlist ", Object.values(json));
           // setRoomList(Object.keys(json));
           // setUserList(Object.values(json));
@@ -44,12 +44,12 @@ const Join = (props) => {
         <div className='roomlist-container-user'>
           
           {(users.length > 0
-            ? users.map((userinfo) =>
+            ? users.map((user) =>
                 <div className= 'room-list'
                     // onHover={() => {
                     //     history.push('/join?roomId=' + roomuser.roomId);
                 >
-                    {userinfo.userName}
+                    {user}
                 </div>)
             : <div>The room is empty!</div>)}
         </div>
@@ -84,6 +84,12 @@ const Join = (props) => {
         props.history.push(`/room/${roomId}`);
     }
 
+    function switchRoom(roomId) {
+        sessionStorage.setItem('user', userName);
+        // const id = uuid();
+        props.history.push(`/room/${roomId}`);
+    }
+
     return (
         <MainContainer>
             <NavbarEmpty/>
@@ -105,6 +111,25 @@ const Join = (props) => {
             <JoinButton onClick={clickJoin}> Join </JoinButton>
             <JoinButton onClick={clickCreate}> Create </JoinButton>
             {err ? <Error>{errMsg}</Error> : null}
+            <div style={{display: 'flex', flexWrap: 'wrap', justifyContent: 'start'}} >
+                {
+                    (Object.keys(roomList).length > 0
+                        ? Object.keys(roomList).map((eachRoom, idx) =>
+                        <div className="roomlist-container">
+                            <div className="roomlist-roomId">
+                              {eachRoom}
+                            </div>
+                            <div >
+                                
+                                {drawUsers(roomList[eachRoom])}
+                            </div>
+                            <div className="join-table"
+                                onClick={() => {switchRoom(eachRoom)}}
+                            >Join Table</div>
+                        </div>)
+                        : <div>The room is empty!</div>)
+                }
+            </div>
         </MainContainer>
     );
 };
