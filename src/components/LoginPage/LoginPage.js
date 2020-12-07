@@ -93,7 +93,7 @@ class LoginPage extends React.Component {
     checkRoomInfo = e => {
         e.preventDefault();
         if (this.state.roomCode == "PizzaMeeting" && this.state.roomPass == "1234") {
-            window.location.href = window.location.host + "/room";
+            window.location.href = window.location.host + "/join";
         }
         else {
             console.log("wrong info");

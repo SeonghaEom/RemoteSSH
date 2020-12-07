@@ -27,7 +27,7 @@ function App() {
             <Switch>
                 <Route exact path="/" component={LandingPage} />
                 <Route exact path="/room-list" component={RoomList} />
-                <Route exact path="/room" component={Join} />
+                <Route exact path="/join" component={Join} />
                 <Route exact path="/otherroom" component={OtherRoom} />
                 <Route exact path="/room/:roomID" component={Room} />
                 <Route exact path="/login" component={LoginPage} />

@@ -46,7 +46,7 @@ function Room(props) {
     const socketRef = useRef();
     const userVideo = useRef();
     const peersRef = useRef([]);
-    const roomID = props.match.params.roomId;
+    const roomID = props.match.params.roomID;
   const [wishlist, setWishList] = useState([]);
   const [displayChat, setDisplayChat] = useState(false);
   const [displayWish, setDisplayWish] = useState(false);
@@ -63,7 +63,7 @@ function Room(props) {
     socketRef.current = io.connect('https://e20f32fed856.ngrok.io');
     navigator.mediaDevices.getUserMedia({ video: videoConstraints, audio: true }).then(stream => {
         userVideo.current.srcObject = stream;
-        socketRef.current.emit("join room", {roomID: roomID, userName: currentUser} );
+        socketRef.current.emit("join room", roomID);
         socketRef.current.on("all users", users => {
             const peers = [];
             users.forEach(userID => {

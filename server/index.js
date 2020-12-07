@@ -63,12 +63,12 @@ io.on('connection', socket => {
                 socket.emit("room full");
                 return;
             }
-            users[roomID].push({socketID: socket.id, userName: userName});
+            users[roomID].push(socket.id);
         } else {
-            users[roomID] = [{socketID: socket.id, userName: userName}];
+            users[roomID] = [socket.id];
         }
         socketToRoom[socket.id] = roomID;
-        const usersInThisRoom = users[roomID].filter(each => each.socketID !== socket.id);
+        const usersInThisRoom = users[roomID].filter(socketID => socketID !== socket.id);
         console.log("users in this room ", usersInThisRoom);
         socket.emit("all users", usersInThisRoom);
     });
@@ -89,8 +89,8 @@ io.on('connection', socket => {
         if (room) {
             room = room.filter(each => each.socketID !== socket.id);
             users[roomID] = room;
-            room.forEach(peer => {
-              io.to(peer.socketID).emit("user left", socket.id);
+            room.forEach(socketID => {
+              io.to(socketID).emit("user left", socket.id);
             })
         }
     });

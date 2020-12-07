@@ -36,7 +36,7 @@ export default function TopicSuggestion() {
                 <TopicCard topic={item.topic} dislikes={item.dislikes} likes={item.likes} id={item.id}/>
                 ) : ' '}
             </div>
-            <Link to="/room">
+            <Link to="/join">
                 <button className="primary-button proceed-room">Proceed to Room</button>
             </Link>
         </div>
