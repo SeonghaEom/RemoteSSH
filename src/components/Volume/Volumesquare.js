@@ -5,7 +5,6 @@ import soundfile1 from './dialogue_1.mp3';
 import soundfile2 from './dialogue_2.mp3';
 import {Slider,Handles,Tracks} from 'react-compound-slider';
 import { useHistory } from 'react-router-dom';
-import socket from '../../socket';
 import Volumebutton from './Volumebutton.js'
 const Volumesquare = ({ roomname }) => {
     const [playbutton,setPlayButton]=useState(false);

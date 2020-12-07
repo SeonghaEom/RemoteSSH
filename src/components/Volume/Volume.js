@@ -10,12 +10,13 @@ import {Slider,Handles,Tracks} from 'react-compound-slider';
 //   }
 import firestore from "../../config/fbconfig";
 import { useHistory } from 'react-router-dom';
-import socket from '../../socket';
+import io from "socket.io-client";
 
 const Volume = ({ display, roomId, goToScreen }) => {
 
     const [roomList, setRoomList] = useState([]);
     const [userList, setUserList] = useState([]);
+    const socketRef = useRef();
    
     // var talk1= new Audio(soundfile1)
     // var talk2= new Audio(soundfile2) 
@@ -43,20 +44,21 @@ const Volume = ({ display, roomId, goToScreen }) => {
       
 
     useEffect(() => {
+      socketRef.current = io.connect('https://e20f32fed856.ngrok.io');
       async function fetchData(){
          
-        // await fetch('https://e92d9cbad3d1.ngrok.io/room-list')
-        await fetch('https://remote-ssh.graymove.com/room-list')
+        await fetch('https://e92d9cbad3d1.ngrok.io/room-list')
+        // await fetch('https://remote-ssh.graymove.com/room-list')
           .then(function(response) {
             return response.json();
         }).then((json) => {
           setRoomList(json);
           json.forEach((roomId) => {
-            socket.emit('BE-get-all-users', roomId);
+            socketRef.current.emit('BE-get-all-users', roomId);
           })
         })}
       fetchData();
-      socket.on('FE-show-all-users', ({roomId, users}) => {
+      socketRef.current.on('FE-show-all-users', ({roomId, users}) => {
         setUserList((preList) => {
           
           preList = preList.concat({

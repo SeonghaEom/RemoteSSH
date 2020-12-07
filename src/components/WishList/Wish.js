@@ -1,7 +1,5 @@
 import React, { useEffect, useState, useRef, useHistory } from 'react';
 import styled from 'styled-components';
-import socket from '../../socket';
-// import socket from '../../socket';
 
 const Wish = ({display, setWishList, wishlist, goToScreen}) => {
 

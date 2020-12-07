@@ -2,9 +2,7 @@ import React, { useEffect, useState, useRef } from 'react';
 import styled from 'styled-components';
 import Form from 'react-bootstrap/Form'
 import {Link} from 'react-router-dom'
-import socket from '../../socket';
 import Modal from 'react-bootstrap/Modal';
-// import socket from '../../socket';
 
 //for firebase
 // import firebase from '../../config/fbconfig'

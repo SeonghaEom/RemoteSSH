@@ -1,39 +1,30 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useState, useRef} from "react";
 import firestore from "../config/fbconfig";
 import { useHistory } from 'react-router-dom';
-import socket from '../socket';
+import io from "socket.io-client";
 
-const RoomList = ({ display, roomId, goToScreen }) => {
+const RoomList = ({ display, roomId, goToScreen, switchRoom}) => {
 
-    const [roomList, setRoomList] = useState([]); // {roomId, users}
+    const [roomList, setRoomList] = useState({}); // {roomId, users}
     const [userList, setUserList] = useState([]);
     let history = useHistory()
+    const socketRef = useRef();
 
 
     useEffect(() => {
       async function fetchData(){
-        // await fetch(' https://e92d9cbad3d1.ngrok.io/room-list')
-        await fetch('https://remote-ssh.graymove.com/room-list')
+        await fetch('https://e20f32fed856.ngrok.io/room-list')
+        // await fetch('https://remote-ssh.graymove.com/room-list')
           .then(function(response) {
             return response.json();
         }).then((json) => {
+          // console.log("roomlist ", Object.keys(json));
+          // console.log("userlist ", Object.values(json));
+          // setRoomList(Object.keys(json));
+          // setUserList(Object.values(json));
           setRoomList(json);
-          json.forEach((roomId) => {
-            socket.emit('BE-get-all-users', roomId);
-          })
         })}
       fetchData();
-      socket.on('FE-show-all-users', ({roomId, users}) => {
-        setUserList((preList) => {
-          
-          preList = preList.concat({
-              roomId: roomId,
-              users: users,
-          })
-          console.log(preList);
-          return preList;
-        })
-      });
 
     }, []);
 
@@ -48,7 +39,7 @@ const RoomList = ({ display, roomId, goToScreen }) => {
                     // onHover={() => {
                     //     history.push('/join?roomId=' + roomuser.roomId);
                 >
-                    {userinfo.info.userName}
+                    {userinfo.userName}
                 </div>)
             : <div>The room is empty!</div>)}
         </div>
@@ -79,24 +70,18 @@ const RoomList = ({ display, roomId, goToScreen }) => {
               </div>
               <div style={{display: 'flex', flexWrap: 'wrap', justifyContent: 'start'}} >
                 {
-                    (userList.length > 0
-                        ? userList.map((roomuser) =>
+                    (Object.keys(roomList).length > 0
+                        ? Object.keys(roomList).map((roomId, idx) =>
                         <div className="roomlist-container">
                             <div className="roomlist-roomId">
-                              {roomuser.roomId}
+                              {roomId}
                             </div>
                             <div >
                                 
-                                {drawUsers(roomuser.users)}
+                                {drawUsers(roomList[roomId])}
                             </div>
                             <div className="join-table"
-                                onClick={() => {
-                                    history.replace(roomuser.roomId);
-                                    socket.emit('BE-leave-room', ({ roomId, leaver: socket.id}));
-                                    // window.location.href='room/' + roomuser.roomId;
-                                    history.go(0);
-                                    
-                                }} 
+                                onClick={() => {switchRoom(roomId)}}
                             >Join Table</div>
                         </div>)
                         : <div>The room is empty!</div>)

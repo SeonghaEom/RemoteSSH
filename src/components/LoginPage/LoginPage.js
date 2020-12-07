@@ -93,7 +93,7 @@ class LoginPage extends React.Component {
     checkRoomInfo = e => {
         e.preventDefault();
         if (this.state.roomCode == "PizzaMeeting" && this.state.roomPass == "1234") {
-            window.location.href = window.location.host + "/join";
+            window.location.href = window.location.host + "/room";
         }
         else {
             console.log("wrong info");
@@ -104,6 +104,7 @@ class LoginPage extends React.Component {
         e.preventDefault();
         if (this.state.roomCode == "PizzaMeeting" && this.state.roomPass == "1234") {
             window.location.pathname = "/topicSuggestion";
+            sessionStorage.setItem('user', this.state.username);
         }
         else {
             alert("check your inputs!");

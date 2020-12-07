@@ -1,10 +1,8 @@
 import React, { useState, useEffect, useRef, useHistory } from 'react';
 import Peer from 'simple-peer';
 import styled from 'styled-components';
-import socket from '../../socket';
 import VideoCard from '../Video/VideoCard';
 import BottomBar from '../BottomBar/BottomBar';
-import Chat from '../Chat/Chat';
 import AddWish from '../WishList/AddWish';
 import Wish from '../WishList/Wish';
 import RoomList from '../RoomList';
@@ -40,14 +38,15 @@ const videoConstraints = {
     width: window.innerWidth / 2
 };
 
-const Room = (props) => {
+function Room(props) {
   var currentUser = sessionStorage.getItem('user');
+  const roomName = sessionStorage.getItem('roomName');
   // console.log("current user: ", currentUser);
     const [peers, setPeers] = useState([]);
     const socketRef = useRef();
     const userVideo = useRef();
     const peersRef = useRef([]);
-    const roomID = props.match.params.roomID;
+    const roomID = props.match.params.roomId;
   const [wishlist, setWishList] = useState([]);
   const [displayChat, setDisplayChat] = useState(false);
   const [displayWish, setDisplayWish] = useState(false);
@@ -58,11 +57,7 @@ const Room = (props) => {
   const [foodImage, setFoodImage] = useState("");
   const [firebaseUrl, setFirebaseUrl] = useState([]);
 
-  var roomId = props.match.params.roomId;
-  let localStream
-  let remoteStream
-  let isRoomCreator
-  let rtcPeerConnection // Connection between the local device and the remote peer.
+  
 
 
   // console.log("firebaseUrl: ", firebaseUrl);
@@ -70,7 +65,7 @@ const Room = (props) => {
     socketRef.current = io.connect('https://e20f32fed856.ngrok.io');
     navigator.mediaDevices.getUserMedia({ video: videoConstraints, audio: true }).then(stream => {
         userVideo.current.srcObject = stream;
-        socketRef.current.emit("join room", roomID);
+        socketRef.current.emit("join room", {roomID: roomID, userName: currentUser} );
         socketRef.current.on("all users", users => {
             const peers = [];
             users.forEach(userID => {
@@ -82,6 +77,7 @@ const Room = (props) => {
                 })
                 peers.push(peer);
             })
+            console.log("peers ", peers);
             setPeers(peers);
         })
 
@@ -92,11 +88,12 @@ const Room = (props) => {
                 peerID: payload.callerID,
                 peer,
             })
-
+            console.log("add one more peer ", peer);
             setPeers(users => [...users, peer]);
         });
 
         socketRef.current.on("receiving returned signal", payload => {
+          console.log("receiving returned signal ", payload);
             const item = peersRef.current.find(p => p.peerID === payload.id);
             item.peer.signal(payload.signal);
         });
@@ -107,13 +104,13 @@ const Room = (props) => {
       console.log("before: ", peersRef, peers);
       const leaver = peersRef.current.filter(peerObj => peerObj.peerID === socketId)[0];
       // console.log("leaver ", leaver);
-      leaver.peer.destroy();
+      if (leaver) {leaver.peer.destroy();}
       peersRef.current = peersRef.current.filter(peerObj => peerObj.peerID !== socketId);
       const newPeers = peersRef.current.filter(peerObj => peerObj.peer);
       setPeers(newPeers);
       console.log("after : ", peersRef, peers);
     })
-  }, []);
+  }, [props.history.location]);
 
   function createPeer(userToSignal, callerID, stream) {
       const peer = new Peer({
@@ -226,13 +223,16 @@ const Room = (props) => {
 
   // BackButton
   const goToOtherTable = (e) => {
-    e.stopPropagation();
-    setDisplayOtherTable(!displayOtherTable);
-    console.log(displayOtherTable);
-    // e.preventDefault();
+    // e.stopPropagation();
+    // setDisplayOtherTable(!displayOtherTable);
+    // console.log(displayOtherTable);
+    e.preventDefault();
     // socket.emit('BE-leave-room', { roomId, leaver: currentUser });
     // sessionStorage.removeItem('user');
     // window.location.href = '/room-list';
+    socketRef.current.disconnect();
+    // window.location.href = '/join';
+    props.history.go(1);
   };
 
   const goToVolume = (e) => {
@@ -247,10 +247,18 @@ const Room = (props) => {
 
   const goToBack = (e) => {
     e.preventDefault();
-    socket.emit('BE-leave-room', { roomId, leaver: currentUser });
+    // socket.emit('BE-leave-room', { roomId, leaver: currentUser });
+    socketRef.current.disconnect();
     sessionStorage.removeItem('user');
     window.location.href = '/';
   };
+
+  const switchRoom = (roomId) => {
+    socketRef.current.disconnect();
+    setDisplayOtherTable(false);
+    props.history.replace(`/room/${roomId}`);
+    
+  }
 
   // const toggleCameraAudio = (e) => {
   //   console.log("toggle")
@@ -286,10 +294,10 @@ const Room = (props) => {
 
   //   socket.emit('BE-toggle-camera-audio', { roomId, switchTarget: target });
   // };
-
+  
   return (
     <div className='room-title'>
-      <div className='room-title-text'> You're now in room {roomId}</div>
+      <div className='room-title-text'> You're now in room {roomName}</div>
     <RoomContainer>
       
       <Layout/>
@@ -299,7 +307,7 @@ const Room = (props) => {
         displayAdd ?
         <AddWish display ={displayAdd} setWishList={setWishList} wishlist={wishlist} userName={currentUser} userFood={'https://images.pexels.com/photos/708587/pexels-photo-708587.jpeg?auto=compress&cs=tinysrgb&h=750&w=1260'} goToScreen={clickAdd} />:
         displayOtherTable ?
-        <RoomList display={displayOtherTable} roomId={roomId} goToScreen={goToOtherTable}/> :
+        <RoomList display={displayOtherTable} roomId={roomName} goToScreen={goToOtherTable} switchRoom={switchRoom}/> :
         displayVolume?
         <Volume display={displayVolume} goToScreen={goToVolume}/> :
         <div className="room-display-every">
@@ -339,7 +347,6 @@ const Room = (props) => {
           screenShare={screenShare}
         />
       </VideoAndBarContainer>
-      <Chat display={displayChat} roomId={roomId}/>
       
     </RoomContainer>
     </div>

@@ -55,20 +55,21 @@ const users = {};
 const socketToRoom = {};
 
 io.on('connection', socket => {
-    socket.on("join room", roomID => {
+    socket.on("join room", ({roomID: roomID, userName: userName}) => {
+      console.log("join rooom : ", roomID, userName);
         if (users[roomID]) {
             const length = users[roomID].length;
             if (length === 4) {
                 socket.emit("room full");
                 return;
             }
-            users[roomID].push(socket.id);
+            users[roomID].push({socketID: socket.id, userName: userName});
         } else {
-            users[roomID] = [socket.id];
+            users[roomID] = [{socketID: socket.id, userName: userName}];
         }
         socketToRoom[socket.id] = roomID;
-        const usersInThisRoom = users[roomID].filter(id => id !== socket.id);
-
+        const usersInThisRoom = users[roomID].filter(each => each.socketID !== socket.id);
+        console.log("users in this room ", usersInThisRoom);
         socket.emit("all users", usersInThisRoom);
     });
 
@@ -81,15 +82,15 @@ io.on('connection', socket => {
     });
 
     socket.on('disconnect', () => {
-        console.log("disconnect socketToRoom", socketToRoom);
+        console.log(socket.id, " disconnect socketToRoom", socketToRoom);
         console.log("disconnect users", users);
         const roomID = socketToRoom[socket.id];
         let room = users[roomID]; //all connected peer sockets
         if (room) {
-            room = room.filter(id => id !== socket.id);
+            room = room.filter(each => each.socketID !== socket.id);
             users[roomID] = room;
-            room.forEach(peerID => {
-              io.to(peerID).emit("user left", socket.id);
+            room.forEach(peer => {
+              io.to(peer.socketID).emit("user left", socket.id);
             })
         }
     });
@@ -115,5 +116,5 @@ app.get('/otherrooms', (req, res) => {
 app.get('/room-list', (req, res) => {
   // const rawRoomIds = Object.keys(io.sockets.adapter.rooms);
   // res.json([...new Set(rawRoomIds).intersection(new Set(createdRooms))]);
-  res.json(Object.keys(createdRooms));
+  res.json(users);
 });
