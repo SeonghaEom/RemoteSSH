@@ -55,8 +55,8 @@ const users = {};
 const socketToRoom = {};
 
 io.on('connection', socket => {
-    socket.on("join room", ({roomID: roomID, userName: userName}) => {
-      console.log("join rooom : ", roomID, userName);
+    socket.on("join room", roomID => {
+      console.log(socket.id, "join room", roomID);
         if (users[roomID]) {
             const length = users[roomID].length;
             if (length === 4) {
@@ -82,7 +82,7 @@ io.on('connection', socket => {
     });
 
     socket.on('disconnect', () => {
-        console.log(socket.id, " disconnect socketToRoom", socketToRoom);
+        console.log(socket.id, "is disconnected socketToRoom", socketToRoom);
         console.log("disconnect users", users);
         const roomID = socketToRoom[socket.id];
         let room = users[roomID]; //all connected peer sockets

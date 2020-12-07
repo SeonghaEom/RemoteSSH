@@ -56,9 +56,30 @@ const Join = (props) => {
       )
     };
 
+<<<<<<< HEAD
 
     function clickCreate() {
         sessionStorage.setItem('roomName', roomId);
+=======
+    useEffect(() => {
+      async function fetchData(){
+        await fetch(' https://e20f32fed856.ngrok.io/room-list')
+        // await fetch('https://remote-ssh.graymove.com/room-list')
+          .then(function(response) {
+            return response.json();
+        }).then((json) => {
+          console.log("join json", json);
+          setRoomList(json);
+          
+        })}
+      fetchData();
+
+    }, []);
+
+
+    function clickCreate() {
+        sessionStorage.setItem('user', userName);
+>>>>>>> 8fc495a7
         const id = uuid();
         props.history.push(`/room/${roomId}`);
     }
@@ -67,9 +88,16 @@ const Join = (props) => {
 
     }
 
+    function clickJoin() {
+        sessionStorage.setItem('user', userName);
+        // const id = uuid();
+        props.history.push(`/room/${roomId}`);
+    }
+
     return (
         <MainContainer>
             <NavbarEmpty/>
+<<<<<<< HEAD
             <div className='roomlist-background'>
               <div style={{display: 'flex', flexWrap: 'wrap', justifyContent: 'start'}}>
 
@@ -111,6 +139,26 @@ const Join = (props) => {
               {err ? <Error>{errMsg}</Error> : null}
             </div>
         </div>
+=======
+            
+            <h2 className="join-command">Type in either 'cheese' or 'peperoni', or anything and freely switch rooms! </h2>
+            <h3 className="join-command"> In developing mode, so if error happens, always reload :p </h3>
+            <Row id="room-input">
+                <Label htmlFor="roomName">Room Name</Label>
+                <Input value={roomId} type="text" id="roomName" onChange={(e) => {
+                    setRoomId(e.currentTarget.value);
+                }}/>
+            </Row>
+            <Row id="user-input">
+                <Label htmlFor="userName">User Name</Label>
+                <Input value={userName} type="text" id="userName" onChange={(e) => {
+                    setUserName(e.currentTarget.value);
+                }}/>
+            </Row>
+            <JoinButton onClick={clickJoin}> Join </JoinButton>
+            <JoinButton onClick={clickCreate}> Create </JoinButton>
+            {err ? <Error>{errMsg}</Error> : null}
+>>>>>>> 8fc495a7
         </MainContainer>
     );
 };

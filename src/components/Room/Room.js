@@ -57,8 +57,6 @@ function Room(props) {
   const [foodImage, setFoodImage] = useState("");
   const [firebaseUrl, setFirebaseUrl] = useState([]);
 
-  
-
 
   // console.log("firebaseUrl: ", firebaseUrl);
   useEffect(() => {
@@ -227,6 +225,8 @@ function Room(props) {
     // setDisplayOtherTable(!displayOtherTable);
     // console.log(displayOtherTable);
     e.preventDefault();
+    socketRef.current.disconnect();
+    window.location.href = '/join';
     // socket.emit('BE-leave-room', { roomId, leaver: currentUser });
     // sessionStorage.removeItem('user');
     // window.location.href = '/room-list';
@@ -297,7 +297,6 @@ function Room(props) {
   
   return (
     <div className='room-title'>
-      <div className='room-title-text'> You're now in room {roomName}</div>
     <RoomContainer>
       
       <Layout/>
@@ -307,7 +306,7 @@ function Room(props) {
         displayAdd ?
         <AddWish display ={displayAdd} setWishList={setWishList} wishlist={wishlist} userName={currentUser} userFood={'https://images.pexels.com/photos/708587/pexels-photo-708587.jpeg?auto=compress&cs=tinysrgb&h=750&w=1260'} goToScreen={clickAdd} />:
         displayOtherTable ?
-        <RoomList display={displayOtherTable} roomId={roomName} goToScreen={goToOtherTable} switchRoom={switchRoom}/> :
+        <RoomList display={displayOtherTable} roomId={roomID} goToScreen={goToOtherTable}/> :
         displayVolume?
         <Volume display={displayVolume} goToScreen={goToVolume}/> :
         <div className="room-display-every">
