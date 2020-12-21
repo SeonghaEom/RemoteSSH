@@ -54,7 +54,7 @@ const BottomBar = ({
           </div>
           Other Table
         </OtherTable>
-        <WishList onClick={goToVolume}>
+        <WishList >
           <div>
             {/* <FaIcon className="fa fa-volume-up"></FaIcon> */}
             <img src={volume} />

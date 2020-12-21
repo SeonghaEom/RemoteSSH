@@ -8,7 +8,7 @@ class Layout extends React.Component {
         super(props)
 
         this.state = {
-            timeout:1000 * 10 * 1,
+            timeout:1000 * 10 * 3,
             showModal: false,
             isTimedOut: false
         }
