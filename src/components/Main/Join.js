@@ -3,6 +3,8 @@ import {useLocation} from 'react-router-dom';
 import styled from 'styled-components';
 import NavbarEmpty from '../Navbar/NavbarEmpty';
 import { v1 as uuid } from "uuid";
+import Volumesquare from './Volumesquare.js'
+
 
 function useQuery() {
     return new URLSearchParams(useLocation().search);
@@ -24,6 +26,8 @@ const Join = (props) => {
     const [roomList, setRoomList] = useState({}); // {roomId, users}
     const [userList, setUserList] = useState([]);
 
+
+    
     useEffect(() => {
       async function fetchData(){
         await fetch('https://96fdeb27f2d7.ngrok.io/room-list')
@@ -47,11 +51,14 @@ const Join = (props) => {
           
           {(users.length > 0
             ? users.map((user) =>
+                <div>
                 <div className= 'room-list'
                     // onHover={() => {
                     //     history.push('/join?roomId=' + roomuser.roomId);
                 >
                     {user}
+                </div>
+                <Volumesquare/>
                 </div>)
             : <div>The room is empty!</div>)}
         </div>
