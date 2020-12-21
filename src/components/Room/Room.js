@@ -59,7 +59,7 @@ function Room(props) {
 
   // console.log("firebaseUrl: ", firebaseUrl);
   useEffect(() => {
-    socketRef.current = io.connect('https://e20f32fed856.ngrok.io');
+    socketRef.current = io.connect('https://96fdeb27f2d7.ngrok.io');
     navigator.mediaDevices.getUserMedia({ video: videoConstraints, audio: true }).then(stream => {
         userVideo.current.srcObject = stream;
         socketRef.current.emit("join room", roomID);

@@ -13,7 +13,7 @@ const RoomList = ({ display, roomId, goToScreen, switchRoom}) => {
 
     useEffect(() => {
       async function fetchData(){
-        await fetch('https://e20f32fed856.ngrok.io/room-list')
+        await fetch('https://96fdeb27f2d7.ngrok.io/room-list')
         // await fetch('https://remote-ssh.graymove.com/room-list')
           .then(function(response) {
             return response.json();

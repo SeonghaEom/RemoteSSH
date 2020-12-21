@@ -6,7 +6,7 @@ const OtherRoom = (props) => {
 
   useEffect(() => {
     async function fetchData(){
-      await fetch('https://e20f32fed856.ngrok.io/otherrooms')
+      await fetch('https://96fdeb27f2d7.ngrok.io/otherrooms')
       // await fetch('https://remote-ssh.graymove.com/otherrooms')
         .then(function(response) {
           return response.json();
